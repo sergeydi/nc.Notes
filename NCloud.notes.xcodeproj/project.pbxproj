@@ -1,0 +1,326 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E2E073301E12FBFC009CF9A1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E0732F1E12FBFC009CF9A1 /* AppDelegate.swift */; };
+		E2E073321E12FBFC009CF9A1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E073311E12FBFC009CF9A1 /* ViewController.swift */; };
+		E2E073351E12FBFC009CF9A1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2E073331E12FBFC009CF9A1 /* Main.storyboard */; };
+		E2E073381E12FBFC009CF9A1 /* NCloud_notes.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E2E073361E12FBFC009CF9A1 /* NCloud_notes.xcdatamodeld */; };
+		E2E0733A1E12FBFC009CF9A1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2E073391E12FBFC009CF9A1 /* Assets.xcassets */; };
+		E2E0733D1E12FBFC009CF9A1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2E0733B1E12FBFC009CF9A1 /* LaunchScreen.storyboard */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		E2E0732C1E12FBFC009CF9A1 /* NCloud.notes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NCloud.notes.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2E0732F1E12FBFC009CF9A1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E2E073311E12FBFC009CF9A1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		E2E073341E12FBFC009CF9A1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		E2E073371E12FBFC009CF9A1 /* NCloud_notes.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NCloud_notes.xcdatamodel; sourceTree = "<group>"; };
+		E2E073391E12FBFC009CF9A1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E2E0733C1E12FBFC009CF9A1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		E2E0733E1E12FBFC009CF9A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E2E073291E12FBFC009CF9A1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E2E073231E12FBFC009CF9A1 = {
+			isa = PBXGroup;
+			children = (
+				E2E0732E1E12FBFC009CF9A1 /* NCloud.notes */,
+				E2E0732D1E12FBFC009CF9A1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E2E0732D1E12FBFC009CF9A1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E2E0732C1E12FBFC009CF9A1 /* NCloud.notes.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E2E0732E1E12FBFC009CF9A1 /* NCloud.notes */ = {
+			isa = PBXGroup;
+			children = (
+				E2E0732F1E12FBFC009CF9A1 /* AppDelegate.swift */,
+				E2E073311E12FBFC009CF9A1 /* ViewController.swift */,
+				E2E073331E12FBFC009CF9A1 /* Main.storyboard */,
+				E2E073391E12FBFC009CF9A1 /* Assets.xcassets */,
+				E2E0733B1E12FBFC009CF9A1 /* LaunchScreen.storyboard */,
+				E2E0733E1E12FBFC009CF9A1 /* Info.plist */,
+				E2E073361E12FBFC009CF9A1 /* NCloud_notes.xcdatamodeld */,
+			);
+			path = NCloud.notes;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E2E0732B1E12FBFC009CF9A1 /* NCloud.notes */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E2E073411E12FBFC009CF9A1 /* Build configuration list for PBXNativeTarget "NCloud.notes" */;
+			buildPhases = (
+				E2E073281E12FBFC009CF9A1 /* Sources */,
+				E2E073291E12FBFC009CF9A1 /* Frameworks */,
+				E2E0732A1E12FBFC009CF9A1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NCloud.notes;
+			productName = NCloud.notes;
+			productReference = E2E0732C1E12FBFC009CF9A1 /* NCloud.notes.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E2E073241E12FBFC009CF9A1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0820;
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = "Sergey Didanov";
+				TargetAttributes = {
+					E2E0732B1E12FBFC009CF9A1 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 53273R3EAC;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = E2E073271E12FBFC009CF9A1 /* Build configuration list for PBXProject "NCloud.notes" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E2E073231E12FBFC009CF9A1;
+			productRefGroup = E2E0732D1E12FBFC009CF9A1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E2E0732B1E12FBFC009CF9A1 /* NCloud.notes */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E2E0732A1E12FBFC009CF9A1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E2E0733D1E12FBFC009CF9A1 /* LaunchScreen.storyboard in Resources */,
+				E2E0733A1E12FBFC009CF9A1 /* Assets.xcassets in Resources */,
+				E2E073351E12FBFC009CF9A1 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E2E073281E12FBFC009CF9A1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E2E073381E12FBFC009CF9A1 /* NCloud_notes.xcdatamodeld in Sources */,
+				E2E073321E12FBFC009CF9A1 /* ViewController.swift in Sources */,
+				E2E073301E12FBFC009CF9A1 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		E2E073331E12FBFC009CF9A1 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E2E073341E12FBFC009CF9A1 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		E2E0733B1E12FBFC009CF9A1 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E2E0733C1E12FBFC009CF9A1 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E2E0733F1E12FBFC009CF9A1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E2E073401E12FBFC009CF9A1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E2E073421E12FBFC009CF9A1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 53273R3EAC;
+				INFOPLIST_FILE = NCloud.notes/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.didanov.NCloud-notes";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		E2E073431E12FBFC009CF9A1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 53273R3EAC;
+				INFOPLIST_FILE = NCloud.notes/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.didanov.NCloud-notes";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E2E073271E12FBFC009CF9A1 /* Build configuration list for PBXProject "NCloud.notes" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E2E0733F1E12FBFC009CF9A1 /* Debug */,
+				E2E073401E12FBFC009CF9A1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E2E073411E12FBFC009CF9A1 /* Build configuration list for PBXNativeTarget "NCloud.notes" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E2E073421E12FBFC009CF9A1 /* Debug */,
+				E2E073431E12FBFC009CF9A1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		E2E073361E12FBFC009CF9A1 /* NCloud_notes.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				E2E073371E12FBFC009CF9A1 /* NCloud_notes.xcdatamodel */,
+			);
+			currentVersion = E2E073371E12FBFC009CF9A1 /* NCloud_notes.xcdatamodel */;
+			path = NCloud_notes.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = E2E073241E12FBFC009CF9A1 /* Project object */;
+}
