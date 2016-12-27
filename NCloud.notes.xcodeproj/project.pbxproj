@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A5BD304B693A43CF88664168 /* Pods_NCloud_notes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A87D9EADA89A9E3134F5A6D0 /* Pods_NCloud_notes.framework */; };
 		E2E073301E12FBFC009CF9A1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E0732F1E12FBFC009CF9A1 /* AppDelegate.swift */; };
 		E2E073321E12FBFC009CF9A1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E073311E12FBFC009CF9A1 /* ViewController.swift */; };
 		E2E073351E12FBFC009CF9A1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2E073331E12FBFC009CF9A1 /* Main.storyboard */; };
@@ -16,6 +17,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0879CEA8E269863F3D672E59 /* Pods-NCloud.notes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NCloud.notes.release.xcconfig"; path = "Pods/Target Support Files/Pods-NCloud.notes/Pods-NCloud.notes.release.xcconfig"; sourceTree = "<group>"; };
+		A87D9EADA89A9E3134F5A6D0 /* Pods_NCloud_notes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NCloud_notes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2E0732C1E12FBFC009CF9A1 /* NCloud.notes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NCloud.notes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2E0732F1E12FBFC009CF9A1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E2E073311E12FBFC009CF9A1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -24,6 +27,7 @@
 		E2E073391E12FBFC009CF9A1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E2E0733C1E12FBFC009CF9A1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E2E0733E1E12FBFC009CF9A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FA6FFD17048E516E50F9B38C /* Pods-NCloud.notes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NCloud.notes.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NCloud.notes/Pods-NCloud.notes.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,17 +35,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5BD304B693A43CF88664168 /* Pods_NCloud_notes.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		910191E1B51A38B9CAB3764F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				FA6FFD17048E516E50F9B38C /* Pods-NCloud.notes.debug.xcconfig */,
+				0879CEA8E269863F3D672E59 /* Pods-NCloud.notes.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		A19B70EA565592FC84808D10 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A87D9EADA89A9E3134F5A6D0 /* Pods_NCloud_notes.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E2E073231E12FBFC009CF9A1 = {
 			isa = PBXGroup;
 			children = (
 				E2E0732E1E12FBFC009CF9A1 /* NCloud.notes */,
 				E2E0732D1E12FBFC009CF9A1 /* Products */,
+				910191E1B51A38B9CAB3764F /* Pods */,
+				A19B70EA565592FC84808D10 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,15 +80,23 @@
 		E2E0732E1E12FBFC009CF9A1 /* NCloud.notes */ = {
 			isa = PBXGroup;
 			children = (
-				E2E0732F1E12FBFC009CF9A1 /* AppDelegate.swift */,
 				E2E073311E12FBFC009CF9A1 /* ViewController.swift */,
 				E2E073331E12FBFC009CF9A1 /* Main.storyboard */,
+				E2E073361E12FBFC009CF9A1 /* NCloud_notes.xcdatamodeld */,
+				E2E073441E12FC6B009CF9A1 /* Supporting Files */,
+			);
+			path = NCloud.notes;
+			sourceTree = "<group>";
+		};
+		E2E073441E12FC6B009CF9A1 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				E2E0732F1E12FBFC009CF9A1 /* AppDelegate.swift */,
 				E2E073391E12FBFC009CF9A1 /* Assets.xcassets */,
 				E2E0733B1E12FBFC009CF9A1 /* LaunchScreen.storyboard */,
 				E2E0733E1E12FBFC009CF9A1 /* Info.plist */,
-				E2E073361E12FBFC009CF9A1 /* NCloud_notes.xcdatamodeld */,
 			);
-			path = NCloud.notes;
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -74,9 +106,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E2E073411E12FBFC009CF9A1 /* Build configuration list for PBXNativeTarget "NCloud.notes" */;
 			buildPhases = (
+				63D4B04FED7EACE425A71C75 /* [CP] Check Pods Manifest.lock */,
 				E2E073281E12FBFC009CF9A1 /* Sources */,
 				E2E073291E12FBFC009CF9A1 /* Frameworks */,
 				E2E0732A1E12FBFC009CF9A1 /* Resources */,
+				D7EECB03769CFE002DBDAC2C /* [CP] Embed Pods Frameworks */,
+				593C167FE684A88500C67A12 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -100,6 +135,7 @@
 					E2E0732B1E12FBFC009CF9A1 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = 53273R3EAC;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -134,6 +170,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		593C167FE684A88500C67A12 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NCloud.notes/Pods-NCloud.notes-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		63D4B04FED7EACE425A71C75 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		D7EECB03769CFE002DBDAC2C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NCloud.notes/Pods-NCloud.notes-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E2E073281E12FBFC009CF9A1 /* Sources */ = {
@@ -263,10 +347,12 @@
 		};
 		E2E073421E12FBFC009CF9A1 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FA6FFD17048E516E50F9B38C /* Pods-NCloud.notes.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 53273R3EAC;
 				INFOPLIST_FILE = NCloud.notes/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.didanov.NCloud-notes";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -276,10 +362,12 @@
 		};
 		E2E073431E12FBFC009CF9A1 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0879CEA8E269863F3D672E59 /* Pods-NCloud.notes.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 53273R3EAC;
 				INFOPLIST_FILE = NCloud.notes/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.didanov.NCloud-notes";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -306,6 +394,7 @@
 				E2E073431E12FBFC009CF9A1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
