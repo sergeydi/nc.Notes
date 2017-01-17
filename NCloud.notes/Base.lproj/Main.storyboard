@@ -82,7 +82,7 @@
                             <tableViewSection headerTitle="SUPPORT" id="N6R-6G-GkU">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="JkD-bM-ZXE">
-                                        <rect key="frame" x="0.0" y="201" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="200" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="JkD-bM-ZXE" id="kdc-n9-hk5">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
@@ -136,7 +136,7 @@
                                         <rect key="frame" x="0.0" y="35" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rck-EC-dhN" id="4HC-Ei-Bbd">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Server" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sbX-f6-ovU">
@@ -145,11 +145,14 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="https://cloud.server.com" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BhY-Ax-3ts">
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="cloud.server.com" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BhY-Ax-3ts">
                                                     <rect key="frame" x="118" y="7" width="249" height="30"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="Y6q-3W-h0f" id="iMG-hI-VU4"/>
+                                                    </connections>
                                                 </textField>
                                             </subviews>
                                             <constraints>
@@ -165,7 +168,7 @@
                                         <rect key="frame" x="0.0" y="79" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="scO-Jf-SR3" id="Rpe-zz-tza">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Login" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ePM-sZ-xce">
@@ -179,6 +182,9 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="Y6q-3W-h0f" id="SbB-Nk-h6I"/>
+                                                    </connections>
                                                 </textField>
                                             </subviews>
                                             <constraints>
@@ -194,7 +200,7 @@
                                         <rect key="frame" x="0.0" y="123" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dAc-jQ-zIc" id="xcv-0H-QNW">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MWC-NG-o4a">
@@ -208,7 +214,10 @@
                                                     <rect key="frame" x="118" y="7" width="249" height="30"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="Y6q-3W-h0f" id="CSR-Jf-Wyq"/>
+                                                    </connections>
                                                 </textField>
                                             </subviews>
                                             <constraints>
@@ -222,7 +231,7 @@
                                         <rect key="frame" x="0.0" y="167" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="va9-T0-UyQ" id="YuM-dK-LUY">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Allow untrusted SSL certificate" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CAd-e5-GWe">
@@ -251,7 +260,7 @@
                                         <rect key="frame" x="0.0" y="247" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zWN-vX-6Q1" id="Sal-T3-AOp">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connect" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wqe-iO-80B">
@@ -281,7 +290,12 @@
                         </connections>
                     </tableView>
                     <connections>
+                        <outlet property="allowSelfSignCertSwitch" destination="k41-SM-8n6" id="voH-Bx-9OE"/>
                         <outlet property="connectionActivityIndecator" destination="NBa-NG-30x" id="eAR-F2-v35"/>
+                        <outlet property="connectionStatusButton" destination="wqe-iO-80B" id="zdY-c1-wdJ"/>
+                        <outlet property="passwordTextField" destination="lsT-QL-2WB" id="PPN-mS-XXY"/>
+                        <outlet property="serverNameTextField" destination="BhY-Ax-3ts" id="49j-dG-Ghq"/>
+                        <outlet property="userNameTextField" destination="TTE-ZV-4fe" id="bqw-Fa-PjW"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lcV-76-w66" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -301,7 +315,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7Es-um-1pO" id="EEN-s1-FYn">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
