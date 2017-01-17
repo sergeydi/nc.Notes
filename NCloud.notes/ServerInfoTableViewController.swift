@@ -16,7 +16,7 @@ class ServerInfoTableViewController: UITableViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var connectionStatusButton: UILabel!
     @IBOutlet weak var allowSelfSignCertSwitch: UISwitch!
-    let connectionStatus = UserDefaults.standard
+    let userDefaults = UserDefaults.standard
     var httpClient: HTTPClient!
     var isLoggedIn = false {
         didSet {
@@ -118,13 +118,14 @@ class ServerInfoTableViewController: UITableViewController {
         KeychainWrapper.standard.set(serverNameTextField.text!, forKey: "server")
         KeychainWrapper.standard.set(userNameTextField.text!, forKey: "username")
         KeychainWrapper.standard.set(passwordTextField.text!, forKey: "password")
-        connectionStatus.set(true, forKey: "loggedIn")
+        userDefaults.set(true, forKey: "loggedIn")
         isLoggedIn = true
     }
     
     // Click "Disconnect" button
     func removeServerCredentials() {
-        connectionStatus.removeObject(forKey: "loggedIn")
+        userDefaults.removeObject(forKey: "loggedIn")
+        userDefaults.removeObject(forKey: "syncOnStart")
         KeychainWrapper.standard.removeObject(forKey: "server")
         KeychainWrapper.standard.removeObject(forKey: "username")
         KeychainWrapper.standard.removeObject(forKey: "password")

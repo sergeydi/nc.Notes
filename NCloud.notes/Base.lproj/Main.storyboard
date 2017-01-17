@@ -116,6 +116,10 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="serverNameLabel" destination="Jjp-we-koG" id="PVg-sR-YGE"/>
+                        <outlet property="syncOnStartSwitch" destination="snY-hN-kda" id="Rlm-TM-P4N"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2BA-ud-sEc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
