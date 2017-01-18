@@ -37,7 +37,6 @@ class ServerInfoTableViewController: UITableViewController {
         super.viewDidLoad()
         self.title = "Server information"
         connectionActivityIndecator.isHidden = true
-        // Check if app is logged in
         if UserDefaults.standard.object(forKey: "loggedIn") as? Bool != nil {
             isLoggedIn = true
         }
@@ -82,7 +81,7 @@ class ServerInfoTableViewController: UITableViewController {
                 // Click "Connect" button
                 if (serverNameTextField.text?.characters.count)! > 0 && (userNameTextField.text?.characters.count)! > 0 && (passwordTextField.text?.characters.count)! > 0 {
                     // Start and show connectionActivityIndecator
-                    self.connectionActivityIndecator.startAnimating(); connectionActivityIndecator.isHidden = false; connectionActivityIndecator.startAnimating()
+                    connectionActivityIndecator.isHidden = false; self.connectionActivityIndecator.startAnimating()
                     httpClient = HTTPClient()
                     httpClient.checkServerConnUsing(server: serverNameTextField.text!, username: userNameTextField.text!, password: passwordTextField.text!) { connectionStatus in
                         switch connectionStatus {
@@ -118,6 +117,7 @@ class ServerInfoTableViewController: UITableViewController {
         KeychainWrapper.standard.set(serverNameTextField.text!, forKey: "server")
         KeychainWrapper.standard.set(userNameTextField.text!, forKey: "username")
         KeychainWrapper.standard.set(passwordTextField.text!, forKey: "password")
+        userDefaults.set(true, forKey: "firstRefreshNotesList")
         userDefaults.set(true, forKey: "loggedIn")
         isLoggedIn = true
     }

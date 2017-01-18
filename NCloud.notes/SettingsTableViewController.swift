@@ -33,7 +33,7 @@ class SettingsTableViewController: UITableViewController {
             userDefaults.removeObject(forKey: "syncOnStart")
         }
     }
-
+    
     func showAlert(withMessage message: String) {
         let alert = UIAlertController(title: "Alert", message: message, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
@@ -44,13 +44,13 @@ class SettingsTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     // MARK: - Table view data source
-
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         switch section {
@@ -64,15 +64,12 @@ class SettingsTableViewController: UITableViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        // syncOnStartSwitch part
         if UserDefaults.standard.object(forKey: "syncOnStart") != nil {
+            print("Got it")
             syncOnStartSwitch.setOn(true, animated: false)
         }
-        // serverNameLabel part
-        if UserDefaults.standard.object(forKey: "loggedIn") as? Bool != nil {
-            if let serverName = KeychainWrapper.standard.string(forKey: "server") {
-                serverNameLabel.text = serverName
-            }
+        if let serverName = KeychainWrapper.standard.string(forKey: "server") {
+            serverNameLabel.text = serverName
         } else {
             serverNameLabel.text =  "Not logged in"
             syncOnStartSwitch.setOn(false, animated: false)
