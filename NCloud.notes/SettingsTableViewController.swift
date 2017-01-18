@@ -14,9 +14,7 @@ class SettingsTableViewController: UITableViewController {
     let userDefaults = UserDefaults.standard
     @IBOutlet weak var serverNameLabel: UILabel!
     @IBOutlet weak var syncOnStartSwitch: UISwitch!
-    @IBAction func CloseSettingView(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
-    }
+    @IBAction func CloseSettingView(_ sender: Any) { self.dismiss(animated: true, completion: nil) }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,7 +48,6 @@ class SettingsTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 2
     }
 
@@ -67,9 +64,8 @@ class SettingsTableViewController: UITableViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print("View will appear")
         // syncOnStartSwitch part
-        if userDefaults.object(forKey: "syncOnStart") != nil {
+        if UserDefaults.standard.object(forKey: "syncOnStart") != nil {
             syncOnStartSwitch.setOn(true, animated: false)
         }
         // serverNameLabel part

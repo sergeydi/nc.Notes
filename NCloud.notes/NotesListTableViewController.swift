@@ -9,20 +9,39 @@
 import UIKit
 
 class NotesListTableViewController: UITableViewController {
-    let userDefaults = UserDefaults.standard
+    var httpClient: HTTPClient!
     @IBAction func addNoteButton(_ sender: Any) {
         print("Add new note action")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        initTableView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if UserDefaults.standard.object(forKey: "loggedIn") as? Bool != nil && tableView.numberOfRows(inSection: 0) == 0 {
+            initTableView()
+        }
+    }
+    
+    func initTableView() {
         if UserDefaults.standard.object(forKey: "loggedIn") as? Bool != nil {
             print("Connected to server")
+            refreshControl = UIRefreshControl()
+            tableView.addSubview(self.refreshControl!)
+            refreshControl?.addTarget(self, action: #selector(NotesListTableViewController.refreshNotesList), for: .valueChanged)
+            if UserDefaults.standard.object(forKey: "syncOnStart") != nil {
+                print("Sync on start true")
+                self.refreshControl?.beginRefreshing()
+                self.tableView?.setContentOffset(CGPoint(x: 0, y: CGFloat(0)-self.refreshControl!.frame.size.height*2), animated: true)
+                refreshNotesList()
+            }
         }
-        if userDefaults.object(forKey: "syncOnStart") != nil {
-            print("Sync on start true")
-        }
+    }
+    
+    func refreshNotesList() {
+        print("Refresh notes list begin")
     }
 
     override func didReceiveMemoryWarning() {
