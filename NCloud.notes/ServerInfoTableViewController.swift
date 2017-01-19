@@ -17,15 +17,14 @@ class ServerInfoTableViewController: UITableViewController {
     @IBOutlet weak var connectionStatusButton: UILabel!
     @IBOutlet weak var allowSelfSignCertSwitch: UISwitch!
     let userDefaults = UserDefaults.standard
-    var httpClient: HTTPClient!
+    let httpClient = HTTPClient()
     var isLoggedIn = false {
         didSet {
-            switch isLoggedIn {
-            case true:
+            if isLoggedIn {
                 guard let serverName = KeychainWrapper.standard.string(forKey: "server"), let userName = KeychainWrapper.standard.string(forKey: "username"), let password = KeychainWrapper.standard.string(forKey: "password") else { return }
                 serverNameTextField.text = serverName; userNameTextField.text = userName; passwordTextField.text = password
                 connectionStatusButton.text = "Disconnect"
-            case false:
+            } else {
                 connectionStatusButton.text = "Connect"
             }
         }
@@ -70,15 +69,13 @@ class ServerInfoTableViewController: UITableViewController {
         guard indexPath.section == 1 else { return }
         if !isLoggedIn {
             // Click "Connect" button
-            if (serverNameTextField.text?.characters.count)! > 0 && (userNameTextField.text?.characters.count)! > 0 && (passwordTextField.text?.characters.count)! > 0 {
+            if (serverNameTextField.text?.characters.count)! > 0 && (userNameTextField.text?.characters.count)! > 0 && (passwordTextField.text?.characters.count)! > 0 && !connectionActivityIndecator.isAnimating {
                 connectionActivityIndecator.isHidden = false; self.connectionActivityIndecator.startAnimating()
-                httpClient = HTTPClient()
-                httpClient.checkServerConnUsing(server: serverNameTextField.text!, username: userNameTextField.text!, password: passwordTextField.text!) { connectionStatus in
-                    switch connectionStatus {
-                    case true:
+                httpClient.connectToServerUsing(server: serverNameTextField.text!, username: userNameTextField.text!, password: passwordTextField.text!) { connectionStatus in
+                    if connectionStatus {
                         self.saveServerCredentials()
                         self.showAlert(withMessage: "Connection successfull")
-                    case false:
+                    } else {
                         self.showAlert(withMessage: "Server information is incorrect!")
                     }
                     self.connectionActivityIndecator.stopAnimating(); self.connectionActivityIndecator.isHidden = true
