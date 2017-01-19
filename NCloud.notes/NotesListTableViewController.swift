@@ -29,16 +29,14 @@ class NotesListTableViewController: UITableViewController {
     }
     
     func initTableView() {
-        if UserDefaults.standard.object(forKey: "loggedIn") as? Bool != nil {
-            refreshControl = UIRefreshControl()
-            tableView.addSubview(self.refreshControl!)
-            refreshControl?.addTarget(self, action: #selector(NotesListTableViewController.refreshNotesList), for: .valueChanged)
-            if UserDefaults.standard.object(forKey: "syncOnStart") != nil || UserDefaults.standard.object(forKey: "firstRefreshNotesList") as? Bool != nil {
-                self.refreshControl?.beginRefreshing()
-                self.tableView?.setContentOffset(CGPoint(x: 0, y: CGFloat(0)-self.refreshControl!.frame.size.height*2), animated: true)
-                refreshNotesList()
-            }
-        }
+        guard UserDefaults.standard.object(forKey: "loggedIn") as? Bool != nil else { return }
+        refreshControl = UIRefreshControl()
+        tableView.addSubview(self.refreshControl!)
+        refreshControl?.addTarget(self, action: #selector(NotesListTableViewController.refreshNotesList), for: .valueChanged)
+        guard UserDefaults.standard.object(forKey: "syncOnStart") != nil || UserDefaults.standard.object(forKey: "firstRefreshNotesList") as? Bool != nil  else { return }
+        self.refreshControl?.beginRefreshing()
+        self.tableView?.setContentOffset(CGPoint(x: 0, y: CGFloat(0)-self.refreshControl!.frame.size.height*2), animated: true)
+        refreshNotesList()
     }
     
     func refreshNotesList() {

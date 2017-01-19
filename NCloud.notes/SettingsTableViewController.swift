@@ -52,15 +52,7 @@ class SettingsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        switch section {
-        case 0:
-            return 2
-        case 1:
-            return 1
-        default:
-            return 0
-        }
+        return section == 0 ? 2 : 1
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -86,15 +78,13 @@ extension SettingsTableViewController: MFMailComposeViewControllerDelegate {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         // Contact button tapped
-        if indexPath.section == 1 {
-            if MFMailComposeViewController.canSendMail(){
-                let mailComposeVC = MFMailComposeViewController()
-                mailComposeVC.mailComposeDelegate = self
-                mailComposeVC.setToRecipients(["support@didanov.com"])
-                mailComposeVC.setSubject("NCloud.notes issue")
-                present(mailComposeVC, animated: true, completion: nil)
-            }
-        }
+        guard indexPath.section == 1 else { return }
+        guard MFMailComposeViewController.canSendMail() else { return }
+        let mailComposeVC = MFMailComposeViewController()
+        mailComposeVC.mailComposeDelegate = self
+        mailComposeVC.setToRecipients(["support@didanov.com"])
+        mailComposeVC.setSubject("NCloud.notes issue")
+        present(mailComposeVC, animated: true, completion: nil)
     }
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {

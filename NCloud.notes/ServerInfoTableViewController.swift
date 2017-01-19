@@ -20,14 +20,12 @@ class ServerInfoTableViewController: UITableViewController {
     var httpClient: HTTPClient!
     var isLoggedIn = false {
         didSet {
-            if isLoggedIn {
+            switch isLoggedIn {
+            case true:
+                guard let serverName = KeychainWrapper.standard.string(forKey: "server"), let userName = KeychainWrapper.standard.string(forKey: "username"), let password = KeychainWrapper.standard.string(forKey: "password") else { return }
+                serverNameTextField.text = serverName; userNameTextField.text = userName; passwordTextField.text = password
                 connectionStatusButton.text = "Disconnect"
-                if let serverName = KeychainWrapper.standard.string(forKey: "server"), let userName = KeychainWrapper.standard.string(forKey: "username"), let password = KeychainWrapper.standard.string(forKey: "password") {
-                    serverNameTextField.text = serverName
-                    userNameTextField.text = userName
-                    passwordTextField.text = password
-                }
-            } else {
+            case false:
                 connectionStatusButton.text = "Connect"
             }
         }
@@ -46,10 +44,9 @@ class ServerInfoTableViewController: UITableViewController {
     
     // If user want to use Self Signed Certificate, show alert and disable switch
     func switchChanged(_ mySwitch: UISwitch) {
-        if mySwitch.isOn {
-            showAlert(withMessage: "Self Signed Certificates disabled in iOS from January 2017.")
-            allowSelfSignCertSwitch.setOn(false, animated: true)
-        }
+        guard mySwitch.isOn else { return }
+        showAlert(withMessage: "Self Signed Certificates disabled in iOS from January 2017.")
+        allowSelfSignCertSwitch.setOn(false, animated: true)
     }
     
     override func didReceiveMemoryWarning() {
@@ -60,48 +57,39 @@ class ServerInfoTableViewController: UITableViewController {
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 2
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        switch section {
-        case 0: return 4
-        case 1: return 1
-        default: return 0
-        }
+        return section == 0 ? 4 : 1
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         // Click "Connect/Disconnect" button
-        if indexPath.section == 1 {
-            if !isLoggedIn {
-                // Click "Connect" button
-                if (serverNameTextField.text?.characters.count)! > 0 && (userNameTextField.text?.characters.count)! > 0 && (passwordTextField.text?.characters.count)! > 0 {
-                    // Start and show connectionActivityIndecator
-                    connectionActivityIndecator.isHidden = false; self.connectionActivityIndecator.startAnimating()
-                    httpClient = HTTPClient()
-                    httpClient.checkServerConnUsing(server: serverNameTextField.text!, username: userNameTextField.text!, password: passwordTextField.text!) { connectionStatus in
-                        switch connectionStatus {
-                        case true:
-                            self.showAlert(withMessage: "Connection successfull")
-                            self.saveServerCredentials()
-                        case false:
-                            self.showAlert(withMessage: "Server information is incorrect!")
-                        }
+        guard indexPath.section == 1 else { return }
+        if !isLoggedIn {
+            // Click "Connect" button
+            if (serverNameTextField.text?.characters.count)! > 0 && (userNameTextField.text?.characters.count)! > 0 && (passwordTextField.text?.characters.count)! > 0 {
+                connectionActivityIndecator.isHidden = false; self.connectionActivityIndecator.startAnimating()
+                httpClient = HTTPClient()
+                httpClient.checkServerConnUsing(server: serverNameTextField.text!, username: userNameTextField.text!, password: passwordTextField.text!) { connectionStatus in
+                    switch connectionStatus {
+                    case true:
+                        self.saveServerCredentials()
+                        self.showAlert(withMessage: "Connection successfull")
+                    case false:
+                        self.showAlert(withMessage: "Server information is incorrect!")
                     }
-                } else {
-                    // One of the fields is empty
-                    showAlert(withMessage: "Server information is incorrect!")
+                    self.connectionActivityIndecator.stopAnimating(); self.connectionActivityIndecator.isHidden = true
                 }
             } else {
-                // Click "Disconnect" button
-                removeServerCredentials()
+                // One of the fields is empty
+                showAlert(withMessage: "Server information is incorrect!")
             }
-            // Stop and hide connectionActivityIndecator
-            self.connectionActivityIndecator.stopAnimating(); connectionActivityIndecator.isHidden = true; connectionActivityIndecator.stopAnimating()
+        } else {
+            // Click "Disconnect" button
+            removeServerCredentials()
         }
     }
     
@@ -114,24 +102,16 @@ class ServerInfoTableViewController: UITableViewController {
     
     // Click "Connect" button with successfull connection
     func saveServerCredentials() {
-        KeychainWrapper.standard.set(serverNameTextField.text!, forKey: "server")
-        KeychainWrapper.standard.set(userNameTextField.text!, forKey: "username")
-        KeychainWrapper.standard.set(passwordTextField.text!, forKey: "password")
-        userDefaults.set(true, forKey: "firstRefreshNotesList")
-        userDefaults.set(true, forKey: "loggedIn")
+        KeychainWrapper.standard.set(serverNameTextField.text!, forKey: "server"); KeychainWrapper.standard.set(userNameTextField.text!, forKey: "username"); KeychainWrapper.standard.set(passwordTextField.text!, forKey: "password")
+        userDefaults.set(true, forKey: "firstRefreshNotesList"); userDefaults.set(true, forKey: "loggedIn")
         isLoggedIn = true
     }
     
     // Click "Disconnect" button
     func removeServerCredentials() {
-        userDefaults.removeObject(forKey: "loggedIn")
-        userDefaults.removeObject(forKey: "syncOnStart")
-        KeychainWrapper.standard.removeObject(forKey: "server")
-        KeychainWrapper.standard.removeObject(forKey: "username")
-        KeychainWrapper.standard.removeObject(forKey: "password")
-        serverNameTextField.text = ""
-        userNameTextField.text = ""
-        passwordTextField.text = ""
+        userDefaults.removeObject(forKey: "loggedIn"); userDefaults.removeObject(forKey: "syncOnStart")
+        KeychainWrapper.standard.removeObject(forKey: "server"); KeychainWrapper.standard.removeObject(forKey: "username"); KeychainWrapper.standard.removeObject(forKey: "password")
+        serverNameTextField.text = ""; userNameTextField.text = ""; passwordTextField.text = ""
         isLoggedIn = false
     }
     
