@@ -11,7 +11,7 @@ import Alamofire
 
 
 
-class HTTPClient {
+class CloudNotesModel {
     let noteApiBaseURL = "/index.php/apps/notes/api/v0.2/notes"
     
     // Check connection to remote server using credentials as arguments
@@ -30,7 +30,7 @@ class HTTPClient {
         }
     }
     
-    func addNotesToCoreData(notesArray: [AnyObject]) {
+    private func addNotesToCoreData(notesArray: [AnyObject]) {
         for case let note as [String:AnyObject] in notesArray {
             print(note["title"] as! String)
         }

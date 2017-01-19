@@ -17,7 +17,7 @@ class ServerInfoTableViewController: UITableViewController {
     @IBOutlet weak var connectionStatusButton: UILabel!
     @IBOutlet weak var allowSelfSignCertSwitch: UISwitch!
     let userDefaults = UserDefaults.standard
-    let httpClient = HTTPClient()
+    let cloudNotesModel = CloudNotesModel()
     var isLoggedIn = false {
         didSet {
             if isLoggedIn {
@@ -71,7 +71,7 @@ class ServerInfoTableViewController: UITableViewController {
             // Click "Connect" button
             if (serverNameTextField.text?.characters.count)! > 0 && (userNameTextField.text?.characters.count)! > 0 && (passwordTextField.text?.characters.count)! > 0 && !connectionActivityIndecator.isAnimating {
                 connectionActivityIndecator.isHidden = false; self.connectionActivityIndecator.startAnimating()
-                httpClient.connectToServerUsing(server: serverNameTextField.text!, username: userNameTextField.text!, password: passwordTextField.text!) { connectionStatus in
+                cloudNotesModel.connectToServerUsing(server: serverNameTextField.text!, username: userNameTextField.text!, password: passwordTextField.text!) { connectionStatus in
                     if connectionStatus {
                         self.saveServerCredentials()
                         self.showAlert(withMessage: "Connection successfull")
