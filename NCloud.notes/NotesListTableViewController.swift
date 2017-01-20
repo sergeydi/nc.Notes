@@ -10,7 +10,6 @@ import UIKit
 
 class NotesListTableViewController: UITableViewController {
     let userDefaults = UserDefaults.standard
-    var httpClient: HTTPClient!
     @IBAction func addNoteButton(_ sender: Any) {
         print("Add new note action")
     }

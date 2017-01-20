@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A5BD304B693A43CF88664168 /* Pods_NCloud_notes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A87D9EADA89A9E3134F5A6D0 /* Pods_NCloud_notes.framework */; };
-		E25E5CC01E19886300622278 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25E5CBF1E19886300622278 /* HTTPClient.swift */; };
+		E25E5CC01E19886300622278 /* CloudNotesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25E5CBF1E19886300622278 /* CloudNotesModel.swift */; };
 		E2E073301E12FBFC009CF9A1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E0732F1E12FBFC009CF9A1 /* AppDelegate.swift */; };
 		E2E073351E12FBFC009CF9A1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2E073331E12FBFC009CF9A1 /* Main.storyboard */; };
 		E2E073381E12FBFC009CF9A1 /* NCloud_notes.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E2E073361E12FBFC009CF9A1 /* NCloud_notes.xcdatamodeld */; };
@@ -22,7 +22,7 @@
 /* Begin PBXFileReference section */
 		0879CEA8E269863F3D672E59 /* Pods-NCloud.notes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NCloud.notes.release.xcconfig"; path = "Pods/Target Support Files/Pods-NCloud.notes/Pods-NCloud.notes.release.xcconfig"; sourceTree = "<group>"; };
 		A87D9EADA89A9E3134F5A6D0 /* Pods_NCloud_notes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NCloud_notes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E25E5CBF1E19886300622278 /* HTTPClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
+		E25E5CBF1E19886300622278 /* CloudNotesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudNotesModel.swift; sourceTree = "<group>"; };
 		E2E0732C1E12FBFC009CF9A1 /* NCloud.notes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NCloud.notes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2E0732F1E12FBFC009CF9A1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E2E073341E12FBFC009CF9A1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -86,7 +86,7 @@
 		E2E0732E1E12FBFC009CF9A1 /* NCloud.notes */ = {
 			isa = PBXGroup;
 			children = (
-				E25E5CBF1E19886300622278 /* HTTPClient.swift */,
+				E25E5CBF1E19886300622278 /* CloudNotesModel.swift */,
 				E2E0734B1E162FCD009CF9A1 /* ServerInfoTableViewController.swift */,
 				E2E073471E14CE9C009CF9A1 /* SettingsTableViewController.swift */,
 				E2E073451E14CB46009CF9A1 /* NotesListTableViewController.swift */,
@@ -235,7 +235,7 @@
 			files = (
 				E2E0734C1E162FCD009CF9A1 /* ServerInfoTableViewController.swift in Sources */,
 				E2E073481E14CE9C009CF9A1 /* SettingsTableViewController.swift in Sources */,
-				E25E5CC01E19886300622278 /* HTTPClient.swift in Sources */,
+				E25E5CC01E19886300622278 /* CloudNotesModel.swift in Sources */,
 				E2E073381E12FBFC009CF9A1 /* NCloud_notes.xcdatamodeld in Sources */,
 				E2E073461E14CB46009CF9A1 /* NotesListTableViewController.swift in Sources */,
 				E2E073301E12FBFC009CF9A1 /* AppDelegate.swift in Sources */,
