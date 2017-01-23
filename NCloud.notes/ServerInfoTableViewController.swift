@@ -76,7 +76,7 @@ class ServerInfoTableViewController: UITableViewController {
                         self.saveServerCredentials()
                         self.showAlert(withMessage: "Connection successfull")
                     } else {
-                        self.showAlert(withMessage: "Server information is incorrect!")
+                        self.showAlert(withMessage: "Server information is incorrect or server is not available!")
                     }
                     self.connectionActivityIndecator.stopAnimating(); self.connectionActivityIndecator.isHidden = true
                 }
@@ -109,6 +109,7 @@ class ServerInfoTableViewController: UITableViewController {
         userDefaults.removeObject(forKey: "loggedIn"); userDefaults.removeObject(forKey: "syncOnStart")
         KeychainWrapper.standard.removeObject(forKey: "server"); KeychainWrapper.standard.removeObject(forKey: "username"); KeychainWrapper.standard.removeObject(forKey: "password")
         serverNameTextField.text = ""; userNameTextField.text = ""; passwordTextField.text = ""
+        cloudNotesModel.deleteAllNotes()
         isLoggedIn = false
     }
     

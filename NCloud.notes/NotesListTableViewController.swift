@@ -7,12 +7,14 @@
 //
 
 import UIKit
+import CoreData
 
 class NotesListTableViewController: UITableViewController {
     let userDefaults = UserDefaults.standard
     @IBAction func addNoteButton(_ sender: Any) {
         print("Add new note action")
     }
+    var notes: [NSManagedObject] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,15 +33,31 @@ class NotesListTableViewController: UITableViewController {
         guard UserDefaults.standard.object(forKey: "loggedIn") as? Bool != nil else { return }
         refreshControl = UIRefreshControl()
         tableView.addSubview(self.refreshControl!)
-        refreshControl?.addTarget(self, action: #selector(NotesListTableViewController.refreshNotesList), for: .valueChanged)
+        refreshControl?.addTarget(self, action: #selector(NotesListTableViewController.getNotesFromCoreData), for: .valueChanged)
         guard UserDefaults.standard.object(forKey: "syncOnStart") != nil || UserDefaults.standard.object(forKey: "firstRefreshNotesList") as? Bool != nil  else { return }
         self.refreshControl?.beginRefreshing()
         self.tableView?.setContentOffset(CGPoint(x: 0, y: CGFloat(0)-self.refreshControl!.frame.size.height*2), animated: true)
-        refreshNotesList()
+        getNotesFromCoreData()
     }
     
-    func refreshNotesList() {
-        print("Refresh notes list begin")
+    func getNotesFromCoreData() {
+        print("Try to get notes from CoreData")
+        // Get access to managedContext
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return
+        }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Notes")
+        do {
+            notes = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        print("Всего заметок: ", notes.count)
+        tableView.reloadData()
+        refreshControl?.endRefreshing()
     }
     
     override func didReceiveMemoryWarning() {
@@ -56,18 +74,18 @@ class NotesListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return notes.count
     }
     
-    /*
-     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-     let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-     
-     // Configure the cell...
-     
-     return cell
-     }
-     */
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        let note = notes[indexPath.row]
+        cell.textLabel?.text = note.value(forKeyPath: "title") as? String
+        
+        return cell
+    }
+    
     
     /*
      // Override to support conditional editing of the table view.
