@@ -11,6 +11,7 @@ import CoreData
 
 class NotesListTableViewController: UITableViewController {
     let userDefaults = UserDefaults.standard
+    let cloudNotesModel = CloudNotesModel()
     @IBAction func addNoteButton(_ sender: Any) {
         print("Add new note action")
     }
@@ -29,35 +30,44 @@ class NotesListTableViewController: UITableViewController {
         }
     }
     
+    // Init tableview in logged in to server
     func initTableView() {
         guard UserDefaults.standard.object(forKey: "loggedIn") as? Bool != nil else { return }
         refreshControl = UIRefreshControl()
         tableView.addSubview(self.refreshControl!)
-        refreshControl?.addTarget(self, action: #selector(NotesListTableViewController.getNotesFromCoreData), for: .valueChanged)
+        refreshControl?.addTarget(self, action: #selector(NotesListTableViewController.syncNotes), for: .valueChanged)
         guard UserDefaults.standard.object(forKey: "syncOnStart") != nil || UserDefaults.standard.object(forKey: "firstRefreshNotesList") as? Bool != nil  else { return }
         self.refreshControl?.beginRefreshing()
         self.tableView?.setContentOffset(CGPoint(x: 0, y: CGFloat(0)-self.refreshControl!.frame.size.height*2), animated: true)
-        getNotesFromCoreData()
+        syncNotes()
     }
     
-    func getNotesFromCoreData() {
-        print("Try to get notes from CoreData")
-        // Get access to managedContext
-        guard let appDelegate =
-            UIApplication.shared.delegate as? AppDelegate else {
-                return
+    // Try to sync local <---> remote notes
+    func syncNotes() {
+        cloudNotesModel.getNotesFromServer() { notesFromServer in
+            if notesFromServer != nil {
+                // If got notes from server, sync them to local and show
+                self.cloudNotesModel.syncRemoteNotesToLocal(remoteNotes: notesFromServer!)
+//                self.cloudNotesModel.syncLocalNotesToRemote(remoteNotes: notesFromServer!) { complete in
+//                    if !complete {
+//                        self.showAlert(withMessage: "Could not sync notes to server. Check connection!")
+//                    }
+//                    self.refreshNotesTable()
+//                }
+                self.refreshNotesTable()
+            } else {
+                // If server unavailable get notes from CoreData and show alert
+                self.showAlert(withMessage: "Could not receive notes from server. Check connection!")
+                self.refreshNotesTable()
+            }
         }
-        let managedContext = appDelegate.persistentContainer.viewContext
-        
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Notes")
-        do {
-            notes = try managedContext.fetch(fetchRequest)
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
-        print("Всего заметок: ", notes.count)
-        tableView.reloadData()
-        refreshControl?.endRefreshing()
+    }
+    
+    // Get notes from CoreData and refresh tableview
+    func refreshNotesTable() {
+        self.notes = self.cloudNotesModel.getNotesFromCoreData()
+        self.tableView.reloadData()
+        self.refreshControl?.endRefreshing()
     }
     
     override func didReceiveMemoryWarning() {
@@ -86,6 +96,12 @@ class NotesListTableViewController: UITableViewController {
         return cell
     }
     
+    // Show alert using message as argument
+    func showAlert(withMessage message: String) {
+        let alert = UIAlertController(title: "Alert", message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
     
     /*
      // Override to support conditional editing of the table view.

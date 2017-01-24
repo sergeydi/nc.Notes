@@ -21,7 +21,9 @@ class ServerInfoTableViewController: UITableViewController {
     var isLoggedIn = false {
         didSet {
             if isLoggedIn {
-                guard let serverName = KeychainWrapper.standard.string(forKey: "server"), let userName = KeychainWrapper.standard.string(forKey: "username"), let password = KeychainWrapper.standard.string(forKey: "password") else { return }
+                guard let serverName = KeychainWrapper.standard.string(forKey: "server"),
+                    let userName = KeychainWrapper.standard.string(forKey: "username"),
+                    let password = KeychainWrapper.standard.string(forKey: "password") else { return }
                 serverNameTextField.text = serverName; userNameTextField.text = userName; passwordTextField.text = password
                 connectionStatusButton.text = "Disconnect"
             } else {
