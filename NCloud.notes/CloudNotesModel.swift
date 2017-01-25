@@ -55,12 +55,12 @@ class CloudNotesModel {
         }
     }
     
-    func syncLocalNotesToRemote(remoteNotes: [AnyObject], completeHandler:@escaping (Bool) -> Void) {
-        let localNotes = getNotesFromCoreData()
-        for localNote in localNotes {
-            
-        }
-    }
+//    func syncLocalNotesToRemote(remoteNotes: [AnyObject], completeHandler:@escaping (Bool) -> Void) {
+//        let localNotes = getNotesFromCoreData()
+//        for localNote in localNotes {
+//            
+//        }
+//    }
     
     func getNotesFromCoreData() -> [NSManagedObject] {
         var unsortedNotes = [NSManagedObject]()
@@ -80,7 +80,16 @@ class CloudNotesModel {
     func syncRemoteNotesToLocal(remoteNotes: [AnyObject]) {
         var newNotes = [AnyObject]()
         var updatedNotes = [AnyObject]()
+        var notesToDelete = [NSManagedObject]()
         let localNotesDict = convertLocalNotesToDictionaryByID(notes: getNotesFromCoreData())
+        let remoteNotesDict = convertRemoteNotesToDictionaryByID(notes: remoteNotes)
+        // Remove deleted notes
+        for (key, value) in localNotesDict {
+            if remoteNotesDict[key] == nil {
+               notesToDelete.append(value)
+            }
+        }
+        // Updated current or add new notes
         for case let remoteNote as [String:AnyObject] in remoteNotes {
             // If exist local note for remote note
             if let localNote = localNotesDict[remoteNote["id"] as! Int] {
@@ -101,9 +110,30 @@ class CloudNotesModel {
         if updatedNotes.count > 0 {
             updateCoreDataNotes(newNotes: updatedNotes)
         }
+        if notesToDelete.count > 0 {
+            deleteNotes(notes: notesToDelete)
+        }
+    }
+    
+    func deleteNotes(notes: [NSManagedObject]) {
+        // Get access to CoreData managedContext
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        // Delete notes from context
+        for oldNote in notes {
+            print("delete note")
+            managedContext.delete(oldNote)
+        }
+        // Try save to CoreData
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("Error While Deleting Note: \(error.userInfo)")
+        }
     }
     
     func updateCoreDataNotes(newNotes: [AnyObject]) {
+        print("Update notes")
         var localNotes = [NSManagedObject]()
         // Get access to CoreData managedContext
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
@@ -120,6 +150,11 @@ class CloudNotesModel {
         for case let updatedNote as [String:AnyObject] in newNotes {
             managedContext.delete(localNotesDictionary[(updatedNote["id"] as! Int)]!)
         }
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("Error While Deleting Note: \(error.userInfo)")
+        }
         // Save updated notes to CoreData
         addNotesToCoreData(notesArray: newNotes)
     }
@@ -130,6 +165,15 @@ class CloudNotesModel {
         var dictionary = [Int:NSManagedObject]()
         for note in notes {
             dictionary[(note.value(forKeyPath: "id") as? Int)!] = note
+        }
+        return dictionary
+    }
+    
+    // Convert [AnyObject] to [id:AnyObject]
+    private func convertRemoteNotesToDictionaryByID(notes: [AnyObject]) -> [Int:AnyObject] {
+        var dictionary = [Int:AnyObject]()
+        for case let note as [String:AnyObject] in notes {
+            dictionary[note["id"] as! Int] = note as AnyObject?
         }
         return dictionary
     }
