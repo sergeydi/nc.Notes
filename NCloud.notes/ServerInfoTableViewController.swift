@@ -73,11 +73,12 @@ class ServerInfoTableViewController: UITableViewController {
             // Click "Connect" button
             if (serverNameTextField.text?.characters.count)! > 0 && (userNameTextField.text?.characters.count)! > 0 && (passwordTextField.text?.characters.count)! > 0 && !connectionActivityIndecator.isAnimating {
                 connectionActivityIndecator.isHidden = false; self.connectionActivityIndecator.startAnimating()
+                self.saveServerCredentials()
                 cloudNotesModel.connectToServerUsing(server: serverNameTextField.text!, username: userNameTextField.text!, password: passwordTextField.text!) { connectionStatus in
                     if connectionStatus {
-                        self.saveServerCredentials()
                         self.showAlert(withMessage: "Connection successfull")
                     } else {
+                        self.removeServerCredentials()
                         self.showAlert(withMessage: "Server information is incorrect or server is not available!")
                     }
                     self.connectionActivityIndecator.stopAnimating(); self.connectionActivityIndecator.isHidden = true

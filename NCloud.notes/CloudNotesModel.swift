@@ -11,20 +11,12 @@ import Alamofire
 import CoreData
 import SwiftKeychainWrapper
 
-
-
 class CloudNotesModel {
-    let noteApiBaseURL = "/index.php/apps/notes/api/v0.2/notes"
     
     // Check connection to remote server using credentials as arguments
     func connectToServerUsing(server: String, username: String, password: String, checkConnectionHandler:@escaping (Bool) -> Void) {
-        // Create headers for Http plain authentication
-        var headers: HTTPHeaders = [:]
-        guard let authorizationHeader = Request.authorizationHeader(user: username, password: password) else { checkConnectionHandler(false); return }
-        headers[authorizationHeader.key] = authorizationHeader.value
-        // Build URL and make http-request
-        let requestURL = "https://" + server + noteApiBaseURL
-        Alamofire.request(requestURL, method: .get, headers: headers).validate().responseJSON { response in
+        guard let httpRequest = prepareHttpRequest() else { checkConnectionHandler(false); return }
+        Alamofire.request(httpRequest).validate().responseJSON { response in
             if response.result.isSuccess {
                 // if Success save notes to CoreData
                 self.addNotesToCoreData(notesArray: response.result.value as! [AnyObject])
@@ -35,24 +27,38 @@ class CloudNotesModel {
         }
     }
     
+    // Get all notes from server
     func getNotesFromServer(completeHandler:@escaping ([AnyObject]?) -> Void) {
-        // Get credentials from Keychain
-        guard let serverName = KeychainWrapper.standard.string(forKey: "server"),
-            let userName = KeychainWrapper.standard.string(forKey: "username"),
-            let password = KeychainWrapper.standard.string(forKey: "password") else { completeHandler(nil); return }
-        // Create headers for Http plain authentication
-        var headers: HTTPHeaders = [:]
-        guard let authorizationHeader = Request.authorizationHeader(user: userName, password: password) else { completeHandler(nil); return }
-        headers[authorizationHeader.key] = authorizationHeader.value
-        // Build URL and make http-request
-        let requestURL = "https://" + serverName + noteApiBaseURL
-        Alamofire.request(requestURL, method: .get, headers: headers).validate().responseJSON { response in
+        guard let httpRequest = prepareHttpRequest() else { completeHandler(nil); return }
+        Alamofire.request(httpRequest).validate().responseJSON { response in
             if response.result.isSuccess {
                 completeHandler(response.result.value as? [AnyObject])
             } else {
                 completeHandler(nil)
             }
         }
+    }
+    
+    func prepareHttpRequest() -> URLRequest? {
+        let noteApiBaseURL = "/index.php/apps/notes/api/v0.2/notes"
+        // Get credentials from Keychain
+        guard let serverName = KeychainWrapper.standard.string(forKey: "server"),
+            let userName = KeychainWrapper.standard.string(forKey: "username"),
+            let password = KeychainWrapper.standard.string(forKey: "password") else { return nil }
+        // Init URLRequest
+        let url = "https://" + serverName + noteApiBaseURL
+        var request = URLRequest(url: URL(string: url)!)
+        // Setup base URLRequest atributes
+        request.timeoutInterval = 10
+        request.httpMethod = "GET"
+        // Add HTTP Basic Authentication
+        let userPasswordString = "\(userName):\(password)"
+        let userPasswordData = userPasswordString.data(using: String.Encoding.utf8)
+        let base64EncodedCredential = userPasswordData!.base64EncodedString()
+        let authString = "Basic \(base64EncodedCredential)"
+        request.setValue(authString, forHTTPHeaderField: "Authorization")
+        
+        return request
     }
     
 //    func syncLocalNotesToRemote(remoteNotes: [AnyObject], completeHandler:@escaping (Bool) -> Void) {
