@@ -32,6 +32,7 @@ class CloudNotesModel {
         guard let httpRequest = prepareHttpRequest() else { completeHandler(nil); return }
         Alamofire.request(httpRequest).validate().responseJSON { response in
             if response.result.isSuccess {
+                // If Success return JSON response from the server
                 completeHandler(response.result.value as? [AnyObject])
             } else {
                 completeHandler(nil)
@@ -114,14 +115,14 @@ class CloudNotesModel {
             addNotesToCoreData(notesArray: newNotes)
         }
         if updatedNotes.count > 0 {
-            updateCoreDataNotes(newNotes: updatedNotes)
+            updateCoreDataNotes(updatedNotes: updatedNotes)
         }
         if notesToDelete.count > 0 {
-            deleteNotes(notes: notesToDelete)
+            deleteCoreDataNotes(notes: notesToDelete)
         }
     }
     
-    func deleteNotes(notes: [NSManagedObject]) {
+    func deleteCoreDataNotes(notes: [NSManagedObject]) {
         // Get access to CoreData managedContext
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         let managedContext = appDelegate.persistentContainer.viewContext
@@ -138,7 +139,7 @@ class CloudNotesModel {
         }
     }
     
-    func updateCoreDataNotes(newNotes: [AnyObject]) {
+    func updateCoreDataNotes(updatedNotes: [AnyObject]) {
         print("Update notes")
         var localNotes = [NSManagedObject]()
         // Get access to CoreData managedContext
@@ -153,7 +154,7 @@ class CloudNotesModel {
         }
         let localNotesDictionary = convertLocalNotesToDictionaryByID(notes: localNotes)
         // Remove old notes from CoreData
-        for case let updatedNote as [String:AnyObject] in newNotes {
+        for case let updatedNote as [String:AnyObject] in updatedNotes {
             managedContext.delete(localNotesDictionary[(updatedNote["id"] as! Int)]!)
         }
         do {
@@ -162,7 +163,7 @@ class CloudNotesModel {
             print("Error While Deleting Note: \(error.userInfo)")
         }
         // Save updated notes to CoreData
-        addNotesToCoreData(notesArray: newNotes)
+        addNotesToCoreData(notesArray: updatedNotes)
     }
     
     
