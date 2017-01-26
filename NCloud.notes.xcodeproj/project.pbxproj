@@ -10,6 +10,7 @@
 		A5BD304B693A43CF88664168 /* Pods_NCloud_notes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A87D9EADA89A9E3134F5A6D0 /* Pods_NCloud_notes.framework */; };
 		E220306E1E3934D50019BDA7 /* CloudNotesHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = E220306D1E3934D50019BDA7 /* CloudNotesHTTP.swift */; };
 		E25E5CC01E19886300622278 /* CloudNotesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25E5CBF1E19886300622278 /* CloudNotesModel.swift */; };
+		E2DAD70B1E3940D800CAAD36 /* EditNoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DAD70A1E3940D800CAAD36 /* EditNoteViewController.swift */; };
 		E2E073301E12FBFC009CF9A1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E0732F1E12FBFC009CF9A1 /* AppDelegate.swift */; };
 		E2E073351E12FBFC009CF9A1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2E073331E12FBFC009CF9A1 /* Main.storyboard */; };
 		E2E073381E12FBFC009CF9A1 /* NCloud_notes.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E2E073361E12FBFC009CF9A1 /* NCloud_notes.xcdatamodeld */; };
@@ -25,6 +26,7 @@
 		A87D9EADA89A9E3134F5A6D0 /* Pods_NCloud_notes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NCloud_notes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E220306D1E3934D50019BDA7 /* CloudNotesHTTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudNotesHTTP.swift; sourceTree = "<group>"; };
 		E25E5CBF1E19886300622278 /* CloudNotesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudNotesModel.swift; sourceTree = "<group>"; };
+		E2DAD70A1E3940D800CAAD36 /* EditNoteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditNoteViewController.swift; sourceTree = "<group>"; };
 		E2E0732C1E12FBFC009CF9A1 /* NCloud.notes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NCloud.notes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2E0732F1E12FBFC009CF9A1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E2E073341E12FBFC009CF9A1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 				E2E0734B1E162FCD009CF9A1 /* ServerInfoTableViewController.swift */,
 				E2E073471E14CE9C009CF9A1 /* SettingsTableViewController.swift */,
 				E2E073451E14CB46009CF9A1 /* NotesListTableViewController.swift */,
+				E2DAD70A1E3940D800CAAD36 /* EditNoteViewController.swift */,
 				E2E073331E12FBFC009CF9A1 /* Main.storyboard */,
 				E2E073361E12FBFC009CF9A1 /* NCloud_notes.xcdatamodeld */,
 				E2E073441E12FC6B009CF9A1 /* Supporting Files */,
@@ -238,6 +241,7 @@
 			files = (
 				E2E0734C1E162FCD009CF9A1 /* ServerInfoTableViewController.swift in Sources */,
 				E2E073481E14CE9C009CF9A1 /* SettingsTableViewController.swift in Sources */,
+				E2DAD70B1E3940D800CAAD36 /* EditNoteViewController.swift in Sources */,
 				E220306E1E3934D50019BDA7 /* CloudNotesHTTP.swift in Sources */,
 				E25E5CC01E19886300622278 /* CloudNotesModel.swift in Sources */,
 				E2E073381E12FBFC009CF9A1 /* NCloud_notes.xcdatamodeld in Sources */,

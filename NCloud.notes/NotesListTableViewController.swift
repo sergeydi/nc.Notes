@@ -48,12 +48,12 @@ class NotesListTableViewController: UITableViewController {
             if notesFromServer != nil {
                 // If got notes from server, sync them to local and show
                 self.cloudNotesModel.syncRemoteNotesToLocal(remoteNotes: notesFromServer!)
-//                self.cloudNotesModel.syncLocalNotesToRemote(remoteNotes: notesFromServer!) { complete in
-//                    if !complete {
-//                        self.showAlert(withMessage: "Could not sync notes to server. Check connection!")
-//                    }
-//                    self.refreshNotesTable()
-//                }
+                //                self.cloudNotesModel.syncLocalNotesToRemote(remoteNotes: notesFromServer!) { complete in
+                //                    if !complete {
+                //                        self.showAlert(withMessage: "Could not sync notes to server. Check connection!")
+                //                    }
+                //                    self.refreshNotesTable()
+                //                }
                 self.refreshNotesTable()
             } else {
                 // If server unavailable get notes from CoreData and show alert
@@ -94,6 +94,18 @@ class NotesListTableViewController: UITableViewController {
         cell.textLabel?.text = note.value(forKeyPath: "title") as? String
         
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "editNoteSegue" {
+            guard let indexPath = self.tableView.indexPathForSelectedRow else { return }
+            let destinationController = segue.destination as! EditNoteViewController
+            destinationController.note = self.notes[indexPath.row]
+        }
     }
     
     // Show alert using message as argument
