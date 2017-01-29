@@ -105,6 +105,9 @@ class NotesListTableViewController: UITableViewController {
             guard let indexPath = self.tableView.indexPathForSelectedRow else { return }
             let destinationController = segue.destination as! EditNoteViewController
             destinationController.note = self.notes[indexPath.row]
+            let backItem = UIBarButtonItem()
+            backItem.title = "Notes"
+            navigationItem.backBarButtonItem = backItem
         }
     }
     
