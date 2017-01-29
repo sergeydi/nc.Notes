@@ -13,14 +13,13 @@ class EditNoteViewController: UIViewController, UITextViewDelegate {
 
     @IBOutlet weak var textEditView: UITextView!
     var note: NSManagedObject?
-    var finishEditButton: UIBarButtonItem!
     lazy var shareButton:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.action, target: self, action: #selector(EditNoteViewController.shareNote))
+    lazy var finishEditButton: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(EditNoteViewController.exitEditMode))
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Finish edit text button
-        finishEditButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(exitEditMode))
         navigationItem.setRightBarButtonItems([finishEditButton, shareButton], animated: true)
         finishEditButton.isEnabled = false
         // Load text from note to textEditView
