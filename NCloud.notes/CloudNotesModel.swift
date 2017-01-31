@@ -13,13 +13,15 @@ import SwiftKeychainWrapper
 
 class CloudNotesModel {
     
+    let coreDataManager = CoreDataManager()
+    
     // Check connection to remote server using credentials as arguments
     func connectToServerUsing(server: String, username: String, password: String, checkConnectionHandler:@escaping (Bool) -> Void) {
         guard let httpRequest = prepareHttpRequest() else { checkConnectionHandler(false); return }
         Alamofire.request(httpRequest).validate().responseJSON { response in
             if response.result.isSuccess {
                 // if Success save notes to CoreData
-                self.addNotesToCoreData(notesArray: response.result.value as! [AnyObject])
+                self.saveJsonNotes(notesArray: response.result.value as! [AnyObject])
                 checkConnectionHandler(true)
             } else {
                 checkConnectionHandler(false)
@@ -72,8 +74,8 @@ class CloudNotesModel {
     func getNotesFromCoreData() -> [NSManagedObject] {
         var unsortedNotes = [NSManagedObject]()
         // Get access to CoreData managedContext
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return unsortedNotes }
-        let managedContext = appDelegate.persistentContainer.viewContext
+        let managedContext = CoreDataManager.instance.managedObjectContext
+        
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Notes")
         // Get notes from CoreData, sort by modofication time and store to notes
         do {
@@ -112,13 +114,35 @@ class CloudNotesModel {
             }
         }
         if newNotes.count > 0 {
-            addNotesToCoreData(notesArray: newNotes)
+            saveJsonNotes(notesArray: newNotes)
         }
         if updatedNotes.count > 0 {
             updateCoreDataNotes(updatedNotes: updatedNotes)
         }
         if notesToDelete.count > 0 {
             deleteCoreDataNotes(notes: notesToDelete)
+        }
+    }
+    
+    func updateLocalNote(note: NSManagedObject) {
+        print("Begin saving note")
+        // Get access to CoreData managedContext
+        let managedContext = CoreDataManager.instance.managedObjectContext
+//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+//        let managedContext = appDelegate.persistentContainer.viewContext
+        print(note.value(forKeyPath: "content") as? String)
+        managedContext.delete(note)
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("Error While Deleting Note: \(error.userInfo)")
+        }
+        managedContext.insert(note)
+        // Try save to CoreData
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("Error While Saving Note: \(error.userInfo)")
         }
     }
     
@@ -163,7 +187,7 @@ class CloudNotesModel {
             print("Error While Deleting Note: \(error.userInfo)")
         }
         // Save updated notes to CoreData
-        addNotesToCoreData(notesArray: updatedNotes)
+        saveJsonNotes(notesArray: updatedNotes)
     }
     
     
@@ -197,10 +221,11 @@ class CloudNotesModel {
         return sortedNotes
     }
     
-    private func addNotesToCoreData(notesArray: [AnyObject]) {
+    private func saveJsonNotes(notesArray: [AnyObject]) {
         // Declare access to Managed Object Context(Database) and notesEntity(Table) for using Core Data
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        let managedContext = appDelegate.persistentContainer.viewContext
+//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+//        let managedContext = appDelegate.persistentContainer.viewContext
+        let managedContext = CoreDataManager.instance.managedObjectContext
         let notesEntity = NSEntityDescription.entity(forEntityName: "Notes", in: managedContext)!
         // Save all received notes to managedContext
         for case let note as [String:AnyObject] in notesArray {

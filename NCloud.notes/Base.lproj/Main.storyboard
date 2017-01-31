@@ -306,7 +306,7 @@
             </objects>
             <point key="canvasLocation" x="3965.5999999999999" y="-624.73763118440786"/>
         </scene>
-        <!--NCloud.notes-->
+        <!--nc.Notes-->
         <scene sceneID="HLs-I5-oSL">
             <objects>
                 <tableViewController id="eQC-j0-fet" customClass="NotesListTableViewController" customModule="NCloud_notes" customModuleProvider="target" sceneMemberID="viewController">
@@ -332,7 +332,7 @@
                             <outlet property="delegate" destination="eQC-j0-fet" id="Bih-O6-kdB"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="NCloud.notes" id="SpE-1q-kpb">
+                    <navigationItem key="navigationItem" title="nc.Notes" id="SpE-1q-kpb">
                         <barButtonItem key="leftBarButtonItem" image="Settings" id="pgv-rl-WLR">
                             <connections>
                                 <segue destination="QAp-Hu-9uU" kind="presentation" id="ahZ-3Z-5W4"/>

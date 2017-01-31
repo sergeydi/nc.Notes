@@ -15,6 +15,7 @@ class EditNoteViewController: UIViewController, UITextViewDelegate {
     var note: NSManagedObject?
     lazy var shareButton:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.action, target: self, action: #selector(EditNoteViewController.shareNote))
     lazy var finishEditButton: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(EditNoteViewController.exitEditMode))
+    let cloudNotesModel = CloudNotesModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,8 +29,22 @@ class EditNoteViewController: UIViewController, UITextViewDelegate {
         textEditView.delegate = self
     }
     
+    // Detect when note begin editing
     func textViewDidBeginEditing(_ textView: UITextView) {
         finishEditButton.isEnabled = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        // Save or update local note if did any changes
+        if note?.value(forKeyPath: "content") as? String != textEditView.text {
+            saveNote()
+        }
+    }
+    
+    func saveNote() {
+        note?.setValue(Date().timeStamp, forKey: "modified")
+        note?.setValue(textEditView.text, forKey: "content")
+        CoreDataManager.instance.saveContext()
     }
     
     func shareNote() {
@@ -68,4 +83,9 @@ class EditNoteViewController: UIViewController, UITextViewDelegate {
     }
     */
 
+}
+extension Date {
+    var timeStamp: UInt64 {
+        return UInt64(Int64(self.timeIntervalSince1970))
+    }
 }

@@ -16,6 +16,7 @@ class NotesListTableViewController: UITableViewController {
         print("Add new note action")
     }
     var notes: [NSManagedObject] = []
+    let coreDataManager = CoreDataManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
