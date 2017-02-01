@@ -44,6 +44,7 @@ class EditNoteViewController: UIViewController, UITextViewDelegate {
     func saveNote() {
         note?.setValue(Date().timeStamp, forKey: "modified")
         note?.setValue(textEditView.text, forKey: "content")
+        print(textEditView.text.lines[0])
         CoreDataManager.instance.saveContext()
     }
     
@@ -84,6 +85,11 @@ class EditNoteViewController: UIViewController, UITextViewDelegate {
     */
 
 }
+
+extension String {
+    var lines: [String] { return self.components(separatedBy: .newlines) }
+}
+
 extension Date {
     var timeStamp: UInt64 {
         return UInt64(Int64(self.timeIntervalSince1970))

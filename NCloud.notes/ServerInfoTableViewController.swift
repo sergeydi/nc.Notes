@@ -102,8 +102,10 @@ class ServerInfoTableViewController: UITableViewController {
     
     // Click "Connect" button with successfull connection
     func saveServerCredentials() {
-        KeychainWrapper.standard.set(serverNameTextField.text!, forKey: "server"); KeychainWrapper.standard.set(userNameTextField.text!, forKey: "username"); KeychainWrapper.standard.set(passwordTextField.text!, forKey: "password")
-        userDefaults.set(true, forKey: "firstRefreshNotesList"); userDefaults.set(true, forKey: "loggedIn")
+        KeychainWrapper.standard.set(serverNameTextField.text!, forKey: "server")
+        KeychainWrapper.standard.set(userNameTextField.text!, forKey: "username")
+        KeychainWrapper.standard.set(passwordTextField.text!, forKey: "password")
+        userDefaults.set(true, forKey: "loggedIn")
         isLoggedIn = true
     }
     

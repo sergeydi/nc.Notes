@@ -20,31 +20,25 @@ class NotesListTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        initTableView()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        // Used for the first refreshNotesList() after configure server
-        if UserDefaults.standard.object(forKey: "loggedIn") as? Bool != nil && UserDefaults.standard.object(forKey: "firstRefreshNotesList") as? Bool != nil {
-            initTableView()
-            userDefaults.removeObject(forKey: "firstRefreshNotesList")
-        }
-    }
-    
-    // Init tableview in logged in to server
-    func initTableView() {
-        guard UserDefaults.standard.object(forKey: "loggedIn") as? Bool != nil else { return }
         refreshControl = UIRefreshControl()
         tableView.addSubview(self.refreshControl!)
         refreshControl?.addTarget(self, action: #selector(NotesListTableViewController.syncNotes), for: .valueChanged)
-        guard UserDefaults.standard.object(forKey: "syncOnStart") != nil || UserDefaults.standard.object(forKey: "firstRefreshNotesList") as? Bool != nil  else { return }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        guard UserDefaults.standard.object(forKey: "loggedIn") as? Bool != nil else { return }
         self.refreshControl?.beginRefreshing()
         self.tableView?.setContentOffset(CGPoint(x: 0, y: CGFloat(0)-self.refreshControl!.frame.size.height*2), animated: true)
-        syncNotes()
+        if UserDefaults.standard.object(forKey: "syncOnStart") != nil {
+            syncNotes()
+        } else {
+            refreshNotesTable()
+        }
     }
     
     // Try to sync local <---> remote notes
     func syncNotes() {
+        print("Sync notes")
         cloudNotesModel.getNotesFromServer() { notesFromServer in
             if notesFromServer != nil {
                 // If got notes from server, sync them to local and show
