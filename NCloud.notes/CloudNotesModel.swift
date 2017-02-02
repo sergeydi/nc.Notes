@@ -13,7 +13,7 @@ import CoreData
 class CloudNotesModel {
     static let instance = CloudNotesModel()
     
-//    func syncLocalNotesToRemote(remoteNotes: [AnyObject], completeHandler:@escaping (Bool) -> Void) {
+//    func syncLocalNotesToServer(remoteNotes: [AnyObject], completeHandler:@escaping (Bool) -> Void) {
 //        let localNotes = getNotesFromCoreData()
 //        for localNote in localNotes {
 //            
@@ -23,7 +23,6 @@ class CloudNotesModel {
     func getLocalNotes() -> [Note] {
         var unsortedNotes = [Note]()
         let fetchRequest = NSFetchRequest<Note>(entityName: "Note")
-        // Get notes from CoreData, sort by modofication time and store to notes
         do {
             unsortedNotes = try CoreDataManager.instance.managedObjectContext.fetch(fetchRequest)
         } catch let error as NSError {
@@ -38,10 +37,10 @@ class CloudNotesModel {
         var notesToDelete = [Note]()
         let localNotesDict = convertLocalNotesToDictionaryByID(notes: getLocalNotes())
         let remoteNotesDict = convertRemoteNotesToDictionaryByID(notes: remoteNotes)
-        // Remove deleted notes
+        // Remove notes deleted on server
         for (key, value) in localNotesDict {
             if remoteNotesDict[key] == nil {
-               notesToDelete.append(value as! Note)
+               notesToDelete.append(value)
             }
         }
         // Updated current or add new notes
@@ -49,7 +48,7 @@ class CloudNotesModel {
             // If exist local note for remote note
             if let localNote = localNotesDict[remoteNote["id"] as! Int] {
                 // If remote note newer then local
-                if (localNote.value(forKeyPath: "modified") as? Int)! < remoteNote["modified"] as! Int {
+                if Int(localNote.modified) < remoteNote["modified"] as! Int {
                     // Update it to CoreData
                     print("Find note with new version")
                     updatedNotes.append(remoteNote as AnyObject)
@@ -63,31 +62,15 @@ class CloudNotesModel {
             saveRemoteNotes(notesArray: newNotes)
         }
         if updatedNotes.count > 0 {
-            updateCoreDataNotes(updatedNotes: updatedNotes)
+            updateLocalNotes(updatedNotes: updatedNotes)
         }
         if notesToDelete.count > 0 {
-            deleteLocalNotes(notes: notesToDelete)
+            CoreDataManager.instance.deleteObjects(objects: notesToDelete)
         }
     }
     
-    func deleteLocalNotes(notes: [Note]) {
-        // Delete notes from context
-        for oldNote in notes {
-            CoreDataManager.instance.deleteObject(object: oldNote)
-        }
-        CoreDataManager.instance.saveContext()
-    }
-    
-    func updateCoreDataNotes(updatedNotes: [AnyObject]) {
-        print("Update notes")
-        var localNotes = [Note]()
-        let fetchRequest = NSFetchRequest<Note>(entityName: "Notes")
-        // Get notes from CoreData to localNotes and convert to dictionary [ID:Note]
-        do {
-            localNotes = try CoreDataManager.instance.managedObjectContext.fetch(fetchRequest)
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
+    func updateLocalNotes(updatedNotes: [AnyObject]) {
+        let localNotes = getLocalNotes()
         let localNotesDictionary = convertLocalNotesToDictionaryByID(notes: localNotes)
         // Remove old notes from CoreData
         for case let updatedNote as [String:AnyObject] in updatedNotes {
@@ -98,12 +81,11 @@ class CloudNotesModel {
         saveRemoteNotes(notesArray: updatedNotes)
     }
     
-    
     // Convert [NSManagedObject] array to [note_id:NSManagedObject] dictionary
     private func convertLocalNotesToDictionaryByID(notes: [Note]) -> [Int:Note] {
         var dictionary = [Int:Note]()
         for note in notes {
-            dictionary[(note.value(forKeyPath: "id") as? Int)!] = note
+            dictionary[Int(note.id)] = note
         }
         return dictionary
     }
@@ -121,7 +103,7 @@ class CloudNotesModel {
         var unsortedNotes = [Int:Note]()
         var sortedNotes = [Note]()
         for note in notes {
-            unsortedNotes[(note.value(forKeyPath: "modified") as? Int)!] = note
+            unsortedNotes[Int(note.modified)] = note
         }
         for (_, value) in unsortedNotes.sorted(by: { $0.0 > $1.0 }) {
             sortedNotes.append(value)
@@ -133,27 +115,22 @@ class CloudNotesModel {
         // Save all received notes to managedContext
         for case let note as [String:AnyObject] in notesArray {
             // Insert new empty noteManagedObject(row) into Notes Entity(table)
-            let noteManagedObject = Note()
+            let newNote = Note()
             // Add note attributes to empty ManagedObject
-            noteManagedObject.title = note["title"] as? String
-            noteManagedObject.content = note["content"] as? String
-            noteManagedObject.modified = Int64(note["modified"] as! Int)
-            noteManagedObject.id = Int64(note["id"] as! Int)
-            noteManagedObject.favorite = note["favorite"] as! Bool
+            newNote.title = note["title"] as? String
+            newNote.content = note["content"] as? String
+            newNote.modified = Int64(note["modified"] as! Int)
+            newNote.id = Int64(note["id"] as! Int)
+            newNote.favorite = note["favorite"] as! Bool
         }
         // Try to save all notes to CoreData
         CoreDataManager.instance.saveContext()
     }
     
-    // Delete all notes ONLY!!! from CoreData
-    func deleteAllNotes() {
-        let fetchRequest = NSFetchRequest<Note>(entityName: "Note")
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
-        do {
-            try CoreDataManager.instance.managedObjectContext.execute(deleteRequest)
-        } catch let error as NSError {
-            print(error)
-        }
+    // Delete all local notes
+    func deleteLocalNotes() {
+        let localNotes = getLocalNotes()
+        CoreDataManager.instance.deleteObjects(objects: localNotes)
     }
 }
 

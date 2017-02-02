@@ -83,7 +83,7 @@ extension SettingsTableViewController: MFMailComposeViewControllerDelegate {
         let mailComposeVC = MFMailComposeViewController()
         mailComposeVC.mailComposeDelegate = self
         mailComposeVC.setToRecipients(["support@didanov.com"])
-        mailComposeVC.setSubject("NCloud.notes issue")
+        mailComposeVC.setSubject("nc.Notes issue")
         present(mailComposeVC, animated: true, completion: nil)
     }
     
