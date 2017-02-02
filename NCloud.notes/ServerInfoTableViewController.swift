@@ -17,7 +17,6 @@ class ServerInfoTableViewController: UITableViewController {
     @IBOutlet weak var connectionStatusButton: UILabel!
     @IBOutlet weak var allowSelfSignCertSwitch: UISwitch!
     let userDefaults = UserDefaults.standard
-    let cloudNotesModel = CloudNotesModel()
     var isLoggedIn = false {
         didSet {
             if isLoggedIn {
@@ -74,7 +73,7 @@ class ServerInfoTableViewController: UITableViewController {
             if (serverNameTextField.text?.characters.count)! > 0 && (userNameTextField.text?.characters.count)! > 0 && (passwordTextField.text?.characters.count)! > 0 && !connectionActivityIndecator.isAnimating {
                 connectionActivityIndecator.isHidden = false; self.connectionActivityIndecator.startAnimating()
                 self.saveServerCredentials()
-                cloudNotesModel.connectToServerUsing(server: serverNameTextField.text!, username: userNameTextField.text!, password: passwordTextField.text!) { connectionStatus in
+                CloudNotesHTTP.instance.connectToServerUsing(server: serverNameTextField.text!, username: userNameTextField.text!, password: passwordTextField.text!) { connectionStatus in
                     if connectionStatus {
                         self.showAlert(withMessage: "Connection successfull")
                     } else {
@@ -114,7 +113,7 @@ class ServerInfoTableViewController: UITableViewController {
         userDefaults.removeObject(forKey: "loggedIn"); userDefaults.removeObject(forKey: "syncOnStart")
         KeychainWrapper.standard.removeObject(forKey: "server"); KeychainWrapper.standard.removeObject(forKey: "username"); KeychainWrapper.standard.removeObject(forKey: "password")
         serverNameTextField.text = ""; userNameTextField.text = ""; passwordTextField.text = ""
-        cloudNotesModel.deleteAllNotes()
+        CloudNotesModel.instance.deleteAllNotes()
         isLoggedIn = false
     }
     

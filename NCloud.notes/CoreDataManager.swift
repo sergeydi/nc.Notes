@@ -18,7 +18,7 @@ class CoreDataManager {
         let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return urls[urls.count-1] as NSURL
     }()
-    
+
     lazy var managedObjectModel: NSManagedObjectModel = {
         let modelURL = Bundle.main.url(forResource: "NCloud_notes", withExtension: "momd")!
         return NSManagedObjectModel(contentsOf: modelURL)!
@@ -49,7 +49,21 @@ class CoreDataManager {
         return managedObjectContext
     }()
     
-    func saveContext () {
+    // Entity for Name
+    func entityForName(entityName: String) -> NSEntityDescription {
+        return NSEntityDescription.entity(forEntityName: entityName, in: self.managedObjectContext)!
+    }
+    
+    func deleteObject(object: NSManagedObject) {
+        managedObjectContext.delete(object)
+        saveContext()
+    }
+    
+    func deleteObjects(object: [NSManagedObject]) {
+        
+    }
+    
+    func saveContext() {
         let context = managedObjectContext
         if context.hasChanges {
             do {

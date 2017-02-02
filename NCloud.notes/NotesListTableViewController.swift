@@ -15,7 +15,7 @@ class NotesListTableViewController: UITableViewController {
     @IBAction func addNoteButton(_ sender: Any) {
         print("Add new note action")
     }
-    var notes: [NSManagedObject] = []
+    var notes: [Note] = []
     let coreDataManager = CoreDataManager()
     
     override func viewDidLoad() {
@@ -39,7 +39,7 @@ class NotesListTableViewController: UITableViewController {
     // Try to sync local <---> remote notes
     func syncNotes() {
         print("Sync notes")
-        cloudNotesModel.getNotesFromServer() { notesFromServer in
+        CloudNotesHTTP.instance.getRemoteNotes() { notesFromServer in
             if notesFromServer != nil {
                 // If got notes from server, sync them to local and show
                 self.cloudNotesModel.syncRemoteNotesToLocal(remoteNotes: notesFromServer!)
@@ -60,7 +60,7 @@ class NotesListTableViewController: UITableViewController {
     
     // Get notes from CoreData and refresh tableview
     func refreshNotesTable() {
-        self.notes = self.cloudNotesModel.getNotesFromCoreData()
+        self.notes = self.cloudNotesModel.getLocalNotes()
         self.tableView.reloadData()
         self.refreshControl?.endRefreshing()
     }
@@ -86,7 +86,7 @@ class NotesListTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
         let note = notes[indexPath.row]
-        cell.textLabel?.text = note.value(forKeyPath: "title") as? String
+        cell.textLabel?.text = note.title
         
         return cell
     }

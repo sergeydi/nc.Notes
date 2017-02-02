@@ -9,60 +9,9 @@
 import Foundation
 import Alamofire
 import CoreData
-import SwiftKeychainWrapper
 
 class CloudNotesModel {
-    
-    let coreDataManager = CoreDataManager()
-    
-    // Check connection to remote server using credentials as arguments
-    func connectToServerUsing(server: String, username: String, password: String, checkConnectionHandler:@escaping (Bool) -> Void) {
-        guard let httpRequest = prepareHttpRequest() else { checkConnectionHandler(false); return }
-        Alamofire.request(httpRequest).validate().responseJSON { response in
-            if response.result.isSuccess {
-                // if Success save notes to CoreData
-                self.saveJsonNotes(notesArray: response.result.value as! [AnyObject])
-                checkConnectionHandler(true)
-            } else {
-                checkConnectionHandler(false)
-            }
-        }
-    }
-    
-    // Get all notes from server
-    func getNotesFromServer(completeHandler:@escaping ([AnyObject]?) -> Void) {
-        guard let httpRequest = prepareHttpRequest() else { completeHandler(nil); return }
-        Alamofire.request(httpRequest).validate().responseJSON { response in
-            if response.result.isSuccess {
-                // If Success return JSON response from the server
-                completeHandler(response.result.value as? [AnyObject])
-            } else {
-                completeHandler(nil)
-            }
-        }
-    }
-    
-    func prepareHttpRequest() -> URLRequest? {
-        let noteApiBaseURL = "/index.php/apps/notes/api/v0.2/notes"
-        // Get credentials from Keychain
-        guard let serverName = KeychainWrapper.standard.string(forKey: "server"),
-            let userName = KeychainWrapper.standard.string(forKey: "username"),
-            let password = KeychainWrapper.standard.string(forKey: "password") else { return nil }
-        // Init URLRequest
-        let url = "https://" + serverName + noteApiBaseURL
-        var request = URLRequest(url: URL(string: url)!)
-        // Setup base URLRequest atributes
-        request.timeoutInterval = 10
-        request.httpMethod = "GET"
-        // Add HTTP Basic Authentication
-        let userPasswordString = "\(userName):\(password)"
-        let userPasswordData = userPasswordString.data(using: String.Encoding.utf8)
-        let base64EncodedCredential = userPasswordData!.base64EncodedString()
-        let authString = "Basic \(base64EncodedCredential)"
-        request.setValue(authString, forHTTPHeaderField: "Authorization")
-        
-        return request
-    }
+    static let instance = CloudNotesModel()
     
 //    func syncLocalNotesToRemote(remoteNotes: [AnyObject], completeHandler:@escaping (Bool) -> Void) {
 //        let localNotes = getNotesFromCoreData()
@@ -71,15 +20,12 @@ class CloudNotesModel {
 //        }
 //    }
     
-    func getNotesFromCoreData() -> [NSManagedObject] {
-        var unsortedNotes = [NSManagedObject]()
-        // Get access to CoreData managedContext
-        let managedContext = CoreDataManager.instance.managedObjectContext
-        
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Notes")
+    func getLocalNotes() -> [Note] {
+        var unsortedNotes = [Note]()
+        let fetchRequest = NSFetchRequest<Note>(entityName: "Note")
         // Get notes from CoreData, sort by modofication time and store to notes
         do {
-            unsortedNotes = try managedContext.fetch(fetchRequest)
+            unsortedNotes = try CoreDataManager.instance.managedObjectContext.fetch(fetchRequest)
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
@@ -89,13 +35,13 @@ class CloudNotesModel {
     func syncRemoteNotesToLocal(remoteNotes: [AnyObject]) {
         var newNotes = [AnyObject]()
         var updatedNotes = [AnyObject]()
-        var notesToDelete = [NSManagedObject]()
-        let localNotesDict = convertLocalNotesToDictionaryByID(notes: getNotesFromCoreData())
+        var notesToDelete = [Note]()
+        let localNotesDict = convertLocalNotesToDictionaryByID(notes: getLocalNotes())
         let remoteNotesDict = convertRemoteNotesToDictionaryByID(notes: remoteNotes)
         // Remove deleted notes
         for (key, value) in localNotesDict {
             if remoteNotesDict[key] == nil {
-               notesToDelete.append(value)
+               notesToDelete.append(value as! Note)
             }
         }
         // Updated current or add new notes
@@ -114,86 +60,48 @@ class CloudNotesModel {
             }
         }
         if newNotes.count > 0 {
-            saveJsonNotes(notesArray: newNotes)
+            saveRemoteNotes(notesArray: newNotes)
         }
         if updatedNotes.count > 0 {
             updateCoreDataNotes(updatedNotes: updatedNotes)
         }
         if notesToDelete.count > 0 {
-            deleteCoreDataNotes(notes: notesToDelete)
+            deleteLocalNotes(notes: notesToDelete)
         }
     }
     
-    func updateLocalNote(note: NSManagedObject) {
-        print("Begin saving note")
-        // Get access to CoreData managedContext
-        let managedContext = CoreDataManager.instance.managedObjectContext
-//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-//        let managedContext = appDelegate.persistentContainer.viewContext
-        print(note.value(forKeyPath: "content") as? String)
-        managedContext.delete(note)
-        do {
-            try managedContext.save()
-        } catch let error as NSError {
-            print("Error While Deleting Note: \(error.userInfo)")
-        }
-        managedContext.insert(note)
-        // Try save to CoreData
-        do {
-            try managedContext.save()
-        } catch let error as NSError {
-            print("Error While Saving Note: \(error.userInfo)")
-        }
-    }
-    
-    func deleteCoreDataNotes(notes: [NSManagedObject]) {
-        // Get access to CoreData managedContext
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        let managedContext = appDelegate.persistentContainer.viewContext
+    func deleteLocalNotes(notes: [Note]) {
         // Delete notes from context
         for oldNote in notes {
-            print("delete note")
-            managedContext.delete(oldNote)
+            CoreDataManager.instance.deleteObject(object: oldNote)
         }
-        // Try save to CoreData
-        do {
-            try managedContext.save()
-        } catch let error as NSError {
-            print("Error While Deleting Note: \(error.userInfo)")
-        }
+        CoreDataManager.instance.saveContext()
     }
     
     func updateCoreDataNotes(updatedNotes: [AnyObject]) {
         print("Update notes")
-        var localNotes = [NSManagedObject]()
-        // Get access to CoreData managedContext
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Notes")
+        var localNotes = [Note]()
+        let fetchRequest = NSFetchRequest<Note>(entityName: "Notes")
         // Get notes from CoreData to localNotes and convert to dictionary [ID:Note]
         do {
-            localNotes = try managedContext.fetch(fetchRequest)
+            localNotes = try CoreDataManager.instance.managedObjectContext.fetch(fetchRequest)
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
         let localNotesDictionary = convertLocalNotesToDictionaryByID(notes: localNotes)
         // Remove old notes from CoreData
         for case let updatedNote as [String:AnyObject] in updatedNotes {
-            managedContext.delete(localNotesDictionary[(updatedNote["id"] as! Int)]!)
+            CoreDataManager.instance.managedObjectContext.delete(localNotesDictionary[(updatedNote["id"] as! Int)]!)
         }
-        do {
-            try managedContext.save()
-        } catch let error as NSError {
-            print("Error While Deleting Note: \(error.userInfo)")
-        }
+        CoreDataManager.instance.saveContext()
         // Save updated notes to CoreData
-        saveJsonNotes(notesArray: updatedNotes)
+        saveRemoteNotes(notesArray: updatedNotes)
     }
     
     
     // Convert [NSManagedObject] array to [note_id:NSManagedObject] dictionary
-    private func convertLocalNotesToDictionaryByID(notes: [NSManagedObject]) -> [Int:NSManagedObject] {
-        var dictionary = [Int:NSManagedObject]()
+    private func convertLocalNotesToDictionaryByID(notes: [Note]) -> [Int:Note] {
+        var dictionary = [Int:Note]()
         for note in notes {
             dictionary[(note.value(forKeyPath: "id") as? Int)!] = note
         }
@@ -209,9 +117,9 @@ class CloudNotesModel {
         return dictionary
     }
     
-    private func sortNotesByTimestamp(notes: [NSManagedObject]) -> [NSManagedObject]{
-        var unsortedNotes = [Int:NSManagedObject]()
-        var sortedNotes = [NSManagedObject]()
+    private func sortNotesByTimestamp(notes: [Note]) -> [Note]{
+        var unsortedNotes = [Int:Note]()
+        var sortedNotes = [Note]()
         for note in notes {
             unsortedNotes[(note.value(forKeyPath: "modified") as? Int)!] = note
         }
@@ -221,39 +129,28 @@ class CloudNotesModel {
         return sortedNotes
     }
     
-    private func saveJsonNotes(notesArray: [AnyObject]) {
-        // Declare access to Managed Object Context(Database) and notesEntity(Table) for using Core Data
-//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-//        let managedContext = appDelegate.persistentContainer.viewContext
-        let managedContext = CoreDataManager.instance.managedObjectContext
-        let notesEntity = NSEntityDescription.entity(forEntityName: "Notes", in: managedContext)!
+    func saveRemoteNotes(notesArray: [AnyObject]) {
         // Save all received notes to managedContext
         for case let note as [String:AnyObject] in notesArray {
             // Insert new empty noteManagedObject(row) into Notes Entity(table)
-            let noteManagedObject = NSManagedObject(entity: notesEntity, insertInto: managedContext)
+            let noteManagedObject = Note()
             // Add note attributes to empty ManagedObject
-            noteManagedObject.setValue(note["title"] as! String, forKeyPath: "title")
-            noteManagedObject.setValue(note["content"] as! String, forKeyPath: "content")
-            noteManagedObject.setValue(note["modified"] as! Int, forKeyPath: "modified")
-            noteManagedObject.setValue(note["id"] as! Int, forKeyPath: "id")
-            noteManagedObject.setValue(note["favorite"] as! Bool, forKeyPath: "favorite")
+            noteManagedObject.title = note["title"] as? String
+            noteManagedObject.content = note["content"] as? String
+            noteManagedObject.modified = Int64(note["modified"] as! Int)
+            noteManagedObject.id = Int64(note["id"] as! Int)
+            noteManagedObject.favorite = note["favorite"] as! Bool
         }
-        // Try to save all notes in Managed Object Context to CoreData
-        do {
-            try managedContext.save()
-        } catch let error as NSError {
-            print("Could not save. \(error), \(error.userInfo)")
-        }
+        // Try to save all notes to CoreData
+        CoreDataManager.instance.saveContext()
     }
     
     // Delete all notes ONLY!!! from CoreData
     func deleteAllNotes() {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Notes")
+        let fetchRequest = NSFetchRequest<Note>(entityName: "Note")
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
         do {
-            try managedContext.execute(deleteRequest)
+            try CoreDataManager.instance.managedObjectContext.execute(deleteRequest)
         } catch let error as NSError {
             print(error)
         }

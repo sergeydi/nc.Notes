@@ -12,7 +12,7 @@ import CoreData
 class EditNoteViewController: UIViewController, UITextViewDelegate {
 
     @IBOutlet weak var textEditView: UITextView!
-    var note: NSManagedObject?
+    var note: Note?
     lazy var shareButton:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.action, target: self, action: #selector(EditNoteViewController.shareNote))
     lazy var finishEditButton: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(EditNoteViewController.exitEditMode))
     let cloudNotesModel = CloudNotesModel()
@@ -24,8 +24,7 @@ class EditNoteViewController: UIViewController, UITextViewDelegate {
         navigationItem.setRightBarButtonItems([finishEditButton, shareButton], animated: true)
         finishEditButton.isEnabled = false
         // Load text from note to textEditView
-        guard let noteText = note?.value(forKeyPath: "content") as? String else { return }
-        textEditView.text = noteText
+        textEditView.text = note?.content
         textEditView.delegate = self
     }
     
@@ -36,15 +35,15 @@ class EditNoteViewController: UIViewController, UITextViewDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         // Save or update local note if did any changes
-        if note?.value(forKeyPath: "content") as? String != textEditView.text {
+        if note?.content != textEditView.text {
             saveNote()
         }
     }
     
     func saveNote() {
-        note?.setValue(Date().timeStamp, forKey: "modified")
-        note?.setValue(textEditView.text, forKey: "content")
-        print(textEditView.text.lines[0])
+        note?.modified = Int64(Date().timeStamp)
+        note?.content = textEditView.text
+        note?.title = textEditView.text.characters.count > 0 ? textEditView.text.lines[0] : "New note"
         CoreDataManager.instance.saveContext()
     }
     
