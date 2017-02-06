@@ -21,14 +21,16 @@ class CloudNotesModel {
 //    }
     
     func getLocalNotes() -> [Note] {
-        var unsortedNotes = [Note]()
+        var sortedNotes = [Note]()
         let fetchRequest = NSFetchRequest<Note>(entityName: "Note")
+        let sortDescriptor = NSSortDescriptor(key: "modified", ascending: false)
+        fetchRequest.sortDescriptors = [sortDescriptor]
         do {
-            unsortedNotes = try CoreDataManager.instance.managedObjectContext.fetch(fetchRequest)
+            sortedNotes = try CoreDataManager.instance.managedObjectContext.fetch(fetchRequest)
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-        return unsortedNotes.count > 0 ? sortNotesByTimestamp(notes: unsortedNotes) : unsortedNotes
+        return sortedNotes
     }
     
     func syncRemoteNotesToLocal(remoteNotes: [AnyObject]) {
@@ -97,18 +99,6 @@ class CloudNotesModel {
             dictionary[note["id"] as! Int] = note as AnyObject?
         }
         return dictionary
-    }
-    
-    private func sortNotesByTimestamp(notes: [Note]) -> [Note]{
-        var unsortedNotes = [Int:Note]()
-        var sortedNotes = [Note]()
-        for note in notes {
-            unsortedNotes[Int(note.modified)] = note
-        }
-        for (_, value) in unsortedNotes.sorted(by: { $0.0 > $1.0 }) {
-            sortedNotes.append(value)
-        }
-        return sortedNotes
     }
     
     func saveRemoteNotes(notesArray: [AnyObject]) {

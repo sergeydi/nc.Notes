@@ -12,7 +12,8 @@ import CoreData
 class EditNoteViewController: UIViewController, UITextViewDelegate {
 
     @IBOutlet weak var textEditView: UITextView!
-    var note: Note?
+    var noteID: NSManagedObjectID!
+    var note: Note!
     lazy var shareButton:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.action, target: self, action: #selector(EditNoteViewController.shareNote))
     lazy var finishEditButton: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(EditNoteViewController.exitEditMode))
     let cloudNotesModel = CloudNotesModel()
@@ -23,6 +24,7 @@ class EditNoteViewController: UIViewController, UITextViewDelegate {
         // Finish edit text button
         navigationItem.setRightBarButtonItems([finishEditButton, shareButton], animated: true)
         finishEditButton.isEnabled = false
+        note = CoreDataManager.instance.managedObjectContext.object(with: noteID) as! Note
         // Load text from note to textEditView
         textEditView.text = note?.content
         textEditView.delegate = self

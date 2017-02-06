@@ -99,7 +99,7 @@ class NotesListTableViewController: UITableViewController {
         if segue.identifier == "editNoteSegue" {
             guard let indexPath = self.tableView.indexPathForSelectedRow else { return }
             let destinationController = segue.destination as! EditNoteViewController
-            destinationController.note = self.notes[indexPath.row]
+            destinationController.noteID = self.notes[indexPath.row].objectID
             let backItem = UIBarButtonItem()
             backItem.title = "Notes"
             navigationItem.backBarButtonItem = backItem
