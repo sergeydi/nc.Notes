@@ -10,7 +10,6 @@ import UIKit
 import CoreData
 
 class NotesListTableViewController: UITableViewController {
-    let userDefaults = UserDefaults.standard
     let cloudNotesModel = CloudNotesModel()
     @IBAction func addNoteButton(_ sender: Any) {
         print("Add new note action")

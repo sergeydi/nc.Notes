@@ -16,7 +16,6 @@ class ServerInfoTableViewController: UITableViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var connectionStatusButton: UILabel!
     @IBOutlet weak var allowSelfSignCertSwitch: UISwitch!
-    let userDefaults = UserDefaults.standard
     var isLoggedIn = false {
         didSet {
             if isLoggedIn {
@@ -104,13 +103,13 @@ class ServerInfoTableViewController: UITableViewController {
         KeychainWrapper.standard.set(serverNameTextField.text!, forKey: "server")
         KeychainWrapper.standard.set(userNameTextField.text!, forKey: "username")
         KeychainWrapper.standard.set(passwordTextField.text!, forKey: "password")
-        userDefaults.set(true, forKey: "loggedIn")
+        UserDefaults.standard.set(true, forKey: "loggedIn")
         isLoggedIn = true
     }
     
     // Click "Disconnect" button
     func removeServerCredentials() {
-        userDefaults.removeObject(forKey: "loggedIn"); userDefaults.removeObject(forKey: "syncOnStart")
+        UserDefaults.standard.removeObject(forKey: "loggedIn"); UserDefaults.standard.removeObject(forKey: "syncOnStart")
         KeychainWrapper.standard.removeObject(forKey: "server"); KeychainWrapper.standard.removeObject(forKey: "username"); KeychainWrapper.standard.removeObject(forKey: "password")
         serverNameTextField.text = ""; userNameTextField.text = ""; passwordTextField.text = ""
         CloudNotesModel.instance.deleteLocalNotes()

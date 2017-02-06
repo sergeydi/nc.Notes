@@ -11,7 +11,6 @@ import MessageUI
 import SwiftKeychainWrapper
 
 class SettingsTableViewController: UITableViewController {
-    let userDefaults = UserDefaults.standard
     @IBOutlet weak var serverNameLabel: UILabel!
     @IBOutlet weak var syncOnStartSwitch: UISwitch!
     @IBAction func CloseSettingView(_ sender: Any) { self.dismiss(animated: true, completion: nil) }
@@ -24,13 +23,13 @@ class SettingsTableViewController: UITableViewController {
     func switchChanged(_ mySwitch: UISwitch) {
         if mySwitch.isOn {
             if KeychainWrapper.standard.string(forKey: "server") != nil {
-                userDefaults.set(true, forKey: "syncOnStart")
+                UserDefaults.standard.set(true, forKey: "syncOnStart")
             } else {
                 showAlert(withMessage: "First connect to server!")
                 syncOnStartSwitch.setOn(false, animated: true)
             }
         } else {
-            userDefaults.removeObject(forKey: "syncOnStart")
+            UserDefaults.standard.removeObject(forKey: "syncOnStart")
         }
     }
     
