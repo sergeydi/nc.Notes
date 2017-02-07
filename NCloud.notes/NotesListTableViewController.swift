@@ -42,12 +42,12 @@ class NotesListTableViewController: UITableViewController {
             if notesFromServer != nil {
                 // If got notes from server, sync them to local and show
                 self.cloudNotesModel.syncRemoteNotesToLocal(remoteNotes: notesFromServer!)
-                //                self.cloudNotesModel.syncLocalNotesToRemote(remoteNotes: notesFromServer!) { complete in
-                //                    if !complete {
-                //                        self.showAlert(withMessage: "Could not sync notes to server. Check connection!")
-                //                    }
-                //                    self.refreshNotesTable()
-                //                }
+                                self.cloudNotesModel.syncLocalNotesToServer(remoteNotes: notesFromServer!) { complete in
+                                    if !complete {
+                                        self.showAlert(withMessage: "Could not sync notes to server. Check connection!")
+                                    }
+                                    self.refreshNotesTable()
+                                }
                 self.refreshNotesTable()
             } else {
                 // If server unavailable get notes from CoreData and show alert

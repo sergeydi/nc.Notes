@@ -13,12 +13,31 @@ import CoreData
 class CloudNotesModel {
     static let instance = CloudNotesModel()
     
-//    func syncLocalNotesToServer(remoteNotes: [AnyObject], completeHandler:@escaping (Bool) -> Void) {
-//        let localNotes = getNotesFromCoreData()
-//        for localNote in localNotes {
-//            
-//        }
-//    }
+    func syncLocalNotesToServer(remoteNotes: [AnyObject], completeHandler:@escaping (Bool) -> Void) {
+        let localNotes = getLocalNotes()
+        var updatedNotes = [NSManagedObjectID]()
+        let remoteNotesDict = convertRemoteNotesToDictionaryByID(notes: remoteNotes)
+        // Save new local notes to server
+        
+        // Sync local notes to server
+        for localNote in localNotes {
+            if Int(localNote.modified) > (remoteNotesDict[Int(localNote.id)] as! [String:AnyObject])["modified"] as! Int {
+                print("Found note to update")
+                updatedNotes.append(localNote.objectID)
+            }
+        }
+        if updatedNotes.count > 0 {
+            CloudNotesHTTP.instance.updateRemoteNotes(fromLocal: updatedNotes) { complete in
+                completeHandler(complete)
+            }
+        } else {
+            completeHandler(true)
+        }
+    }
+    
+    func getNewLocalNotes() {
+        
+    }
     
     func getLocalNotes() -> [Note] {
         var sortedNotes = [Note]()
@@ -39,10 +58,10 @@ class CloudNotesModel {
         var notesToDelete = [Note]()
         let localNotesDict = convertLocalNotesToDictionaryByID(notes: getLocalNotes())
         let remoteNotesDict = convertRemoteNotesToDictionaryByID(notes: remoteNotes)
-        // Remove notes deleted on server
+        // Remove local notes deleted on server
         for (key, value) in localNotesDict {
             if remoteNotesDict[key] == nil {
-               notesToDelete.append(value)
+                notesToDelete.append(value)
             }
         }
         // Updated current or add new notes

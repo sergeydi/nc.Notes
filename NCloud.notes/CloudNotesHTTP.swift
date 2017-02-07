@@ -9,6 +9,7 @@
 import Foundation
 import Alamofire
 import SwiftKeychainWrapper
+import CoreData
 
 class CloudNotesHTTP {
     static let instance = CloudNotesHTTP()
@@ -40,7 +41,11 @@ class CloudNotesHTTP {
         }
     }
     
-    func prepareHttpRequest() -> URLRequest? {
+    func updateRemoteNotes(fromLocal: [NSManagedObjectID], updateRemoteNotesHandler:@escaping (Bool) -> Void) {
+        
+    }
+    
+    private func prepareHttpRequest() -> URLRequest? {
         let noteApiBaseURL = "/index.php/apps/notes/api/v0.2/notes"
         // Get credentials from Keychain
         guard let serverName = KeychainWrapper.standard.string(forKey: "server"),
