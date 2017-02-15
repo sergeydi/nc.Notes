@@ -14,56 +14,41 @@ import CoreData
 class CloudNotesHTTP {
     static let instance = CloudNotesHTTP()
     
-    // Check connection to remote server using credentials as arguments
-    func connectToServerUsing(server: String, username: String, password: String, checkConnectionHandler:@escaping (Bool) -> Void) {
-        guard let httpRequest = prepareHttpRequest() else { checkConnectionHandler(false); return }
-        Alamofire.request(httpRequest).validate().responseJSON { response in
-            if response.result.isSuccess {
-                // if Success save notes to CoreData
-                CloudNotesModel.instance.saveRemoteNotes(notesArray: response.result.value as! [AnyObject])
-                checkConnectionHandler(true)
-            } else {
-                checkConnectionHandler(false)
-            }
+    let noteApiBaseURL = "/index.php/apps/notes/api/v0.2/notes"
+    var authHeader: HTTPHeaders? {
+        guard let username = KeychainWrapper.standard.string(forKey: "username"),
+            let password = KeychainWrapper.standard.string(forKey: "password") else { return nil }
+        var header: HTTPHeaders = [:]
+        if let authorizationHeader = Request.authorizationHeader(user: username, password: password) {
+            header[authorizationHeader.key] = authorizationHeader.value
         }
+        return header
     }
     
     // Get all notes from server
-    func getRemoteNotes(completeHandler:@escaping ([AnyObject]?) -> Void) {
-        guard let httpRequest = prepareHttpRequest() else { completeHandler(nil); return }
-        Alamofire.request(httpRequest).validate().responseJSON { response in
+    func getRemoteNotes(completeHandler:@escaping ([AnyObject]?, Bool) -> Void) {
+        guard authHeader != nil, let serverName = KeychainWrapper.standard.string(forKey: "server") else { completeHandler(nil, false); return }
+        let url = "https://" + serverName + noteApiBaseURL
+        Alamofire.request(url, headers: authHeader).validate().responseJSON { response in
             if response.result.isSuccess {
                 // If Success return JSON response from the server
-                completeHandler(response.result.value as? [AnyObject])
+                completeHandler(response.result.value as? [AnyObject], true)
             } else {
-                completeHandler(nil)
+                completeHandler(nil, false)
             }
         }
     }
     
-    func updateRemoteNotes(fromLocal: [NSManagedObjectID], updateRemoteNotesHandler:@escaping (Bool) -> Void) {
+    func updateRemoteNotes(fromLocalNotes: [NSManagedObjectID], updateRemoteNotesHandler:@escaping (Bool) -> Void) {
+        guard authHeader != nil,  let serverName = KeychainWrapper.standard.string(forKey: "server") else { updateRemoteNotesHandler(false); return }
         
-    }
-    
-    private func prepareHttpRequest() -> URLRequest? {
-        let noteApiBaseURL = "/index.php/apps/notes/api/v0.2/notes"
-        // Get credentials from Keychain
-        guard let serverName = KeychainWrapper.standard.string(forKey: "server"),
-            let userName = KeychainWrapper.standard.string(forKey: "username"),
-            let password = KeychainWrapper.standard.string(forKey: "password") else { return nil }
-        // Init URLRequest
-        let url = "https://" + serverName + noteApiBaseURL
-        var request = URLRequest(url: URL(string: url)!)
-        // Setup base URLRequest atributes
-        request.timeoutInterval = 10
-        request.httpMethod = "GET"
-        // Add HTTP Basic Authentication
-        let userPasswordString = "\(userName):\(password)"
-        let userPasswordData = userPasswordString.data(using: String.Encoding.utf8)
-        let base64EncodedCredential = userPasswordData!.base64EncodedString()
-        let authString = "Basic \(base64EncodedCredential)"
-        request.setValue(authString, forHTTPHeaderField: "Authorization")
-        
-        return request
+        for localNoteID in fromLocalNotes {
+            let localNote = CoreDataManager.instance.managedObjectContext.object(with: localNoteID) as! Note
+            let parameters: Parameters = ["content": localNote.content!]
+            let url = "https://" + serverName + noteApiBaseURL + "/\(localNote.id)"
+            Alamofire.request(url, method: .put, parameters: parameters, headers: authHeader).validate().responseJSON { response in
+                print(response.result)
+            }
+        }
     }
 }

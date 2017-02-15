@@ -27,7 +27,7 @@ class CloudNotesModel {
             }
         }
         if updatedNotes.count > 0 {
-            CloudNotesHTTP.instance.updateRemoteNotes(fromLocal: updatedNotes) { complete in
+            CloudNotesHTTP.instance.updateRemoteNotes(fromLocalNotes: updatedNotes) { complete in
                 completeHandler(complete)
             }
         } else {

@@ -25,6 +25,11 @@ class ServerInfoTableViewController: UITableViewController {
                 serverNameTextField.text = serverName; userNameTextField.text = userName; passwordTextField.text = password
                 connectionStatusButton.text = "Disconnect"
             } else {
+                removeServerCredentials()
+                UserDefaults.standard.removeObject(forKey: "loggedIn")
+                UserDefaults.standard.removeObject(forKey: "syncOnStart")
+                serverNameTextField.text = ""; userNameTextField.text = ""; passwordTextField.text = ""
+                CloudNotesModel.instance.deleteLocalNotes()
                 connectionStatusButton.text = "Connect"
             }
         }
@@ -72,8 +77,11 @@ class ServerInfoTableViewController: UITableViewController {
             if (serverNameTextField.text?.characters.count)! > 0 && (userNameTextField.text?.characters.count)! > 0 && (passwordTextField.text?.characters.count)! > 0 && !connectionActivityIndecator.isAnimating {
                 connectionActivityIndecator.isHidden = false; self.connectionActivityIndecator.startAnimating()
                 self.saveServerCredentials()
-                CloudNotesHTTP.instance.connectToServerUsing(server: serverNameTextField.text!, username: userNameTextField.text!, password: passwordTextField.text!) { connectionStatus in
-                    if connectionStatus {
+                CloudNotesHTTP.instance.getRemoteNotes() { response, result in
+                    if result {
+                        CloudNotesModel.instance.saveRemoteNotes(notesArray: response!)
+                        UserDefaults.standard.set(true, forKey: "loggedIn")
+                        self.isLoggedIn = true
                         self.showAlert(withMessage: "Connection successfull")
                     } else {
                         self.removeServerCredentials()
@@ -87,7 +95,7 @@ class ServerInfoTableViewController: UITableViewController {
             }
         } else {
             // Click "Disconnect" button
-            removeServerCredentials()
+            isLoggedIn = false
         }
     }
     
@@ -103,17 +111,13 @@ class ServerInfoTableViewController: UITableViewController {
         KeychainWrapper.standard.set(serverNameTextField.text!, forKey: "server")
         KeychainWrapper.standard.set(userNameTextField.text!, forKey: "username")
         KeychainWrapper.standard.set(passwordTextField.text!, forKey: "password")
-        UserDefaults.standard.set(true, forKey: "loggedIn")
-        isLoggedIn = true
     }
     
     // Click "Disconnect" button
     func removeServerCredentials() {
-        UserDefaults.standard.removeObject(forKey: "loggedIn"); UserDefaults.standard.removeObject(forKey: "syncOnStart")
-        KeychainWrapper.standard.removeObject(forKey: "server"); KeychainWrapper.standard.removeObject(forKey: "username"); KeychainWrapper.standard.removeObject(forKey: "password")
-        serverNameTextField.text = ""; userNameTextField.text = ""; passwordTextField.text = ""
-        CloudNotesModel.instance.deleteLocalNotes()
-        isLoggedIn = false
+        KeychainWrapper.standard.removeObject(forKey: "server")
+        KeychainWrapper.standard.removeObject(forKey: "username")
+        KeychainWrapper.standard.removeObject(forKey: "password")
     }
     
     deinit {

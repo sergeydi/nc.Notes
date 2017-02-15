@@ -38,8 +38,8 @@ class NotesListTableViewController: UITableViewController {
     // Try to sync local <---> remote notes
     func syncNotes() {
         print("Sync notes")
-        CloudNotesHTTP.instance.getRemoteNotes() { notesFromServer in
-            if notesFromServer != nil {
+        CloudNotesHTTP.instance.getRemoteNotes() { notesFromServer, result in
+            if result {
                 // If got notes from server, sync them to local and show
                 self.cloudNotesModel.syncRemoteNotesToLocal(remoteNotes: notesFromServer!)
                                 self.cloudNotesModel.syncLocalNotesToServer(remoteNotes: notesFromServer!) { complete in
