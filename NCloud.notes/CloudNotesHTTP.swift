@@ -42,12 +42,25 @@ class CloudNotesHTTP {
     func updateRemoteNotes(fromLocalNotes: [NSManagedObjectID], updateRemoteNotesHandler:@escaping (Bool) -> Void) {
         guard authHeader != nil,  let serverName = KeychainWrapper.standard.string(forKey: "server") else { updateRemoteNotesHandler(false); return }
         
+        var updateRequests = fromLocalNotes.count {
+            didSet {
+                if updateRequests == 0 {
+                    updateRemoteNotesHandler(true)
+                }
+            }
+        }
+        
         for localNoteID in fromLocalNotes {
             let localNote = CoreDataManager.instance.managedObjectContext.object(with: localNoteID) as! Note
             let parameters: Parameters = ["content": localNote.content!]
             let url = "https://" + serverName + noteApiBaseURL + "/\(localNote.id)"
+            
             Alamofire.request(url, method: .put, parameters: parameters, headers: authHeader).validate().responseJSON { response in
-                print(response.result)
+                if response.result.isSuccess {
+                    updateRequests -= 1
+                } else {
+                    updateRemoteNotesHandler(false)
+                }
             }
         }
     }
