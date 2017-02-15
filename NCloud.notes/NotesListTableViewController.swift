@@ -11,14 +11,23 @@ import CoreData
 
 class NotesListTableViewController: UITableViewController {
     let cloudNotesModel = CloudNotesModel()
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBAction func addNoteButton(_ sender: Any) {
         print("Add new note action")
     }
+    @IBOutlet weak var configurationButton: UIButton!
     var notes: [Note] = []
     let coreDataManager = CoreDataManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Set configuration button image color
+        let origImage = UIImage(named: "Settings")
+        let tintedImage = origImage?.withRenderingMode(.alwaysTemplate)
+        configurationButton.setImage(tintedImage, for: .normal)
+        configurationButton.tintColor = self.view.tintColor
+        
         refreshControl = UIRefreshControl()
         tableView.addSubview(self.refreshControl!)
         refreshControl?.addTarget(self, action: #selector(NotesListTableViewController.syncNotes), for: .valueChanged)
