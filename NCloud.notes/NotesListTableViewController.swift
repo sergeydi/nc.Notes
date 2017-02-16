@@ -27,36 +27,30 @@ class NotesListTableViewController: UITableViewController {
         let tintedImage = origImage?.withRenderingMode(.alwaysTemplate)
         configurationButton.setImage(tintedImage, for: .normal)
         configurationButton.tintColor = self.view.tintColor
-        
-        refreshControl = UIRefreshControl()
-        tableView.addSubview(self.refreshControl!)
-        refreshControl?.addTarget(self, action: #selector(NotesListTableViewController.syncNotes), for: .valueChanged)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        guard UserDefaults.standard.object(forKey: "loggedIn") as? Bool != nil else { return }
-        self.refreshControl?.beginRefreshing()
-        self.tableView?.setContentOffset(CGPoint(x: 0, y: CGFloat(0)-self.refreshControl!.frame.size.height*2), animated: true)
-        if UserDefaults.standard.object(forKey: "syncOnStart") != nil {
-            syncNotes()
-        } else {
+        if UserDefaults.standard.object(forKey: "loggedIn") as? Bool != nil {
             refreshNotesTable()
+            syncNotes()
         }
     }
     
     // Try to sync local <---> remote notes
     func syncNotes() {
-        print("Sync notes")
+        print("Start sync notes")
+        self.activityIndicator.startAnimating()
         CloudNotesHTTP.instance.getRemoteNotes() { notesFromServer, result in
             if result {
                 // If got notes from server, sync them to local and show
                 self.cloudNotesModel.syncRemoteNotesToLocal(remoteNotes: notesFromServer!)
-                                self.cloudNotesModel.syncLocalNotesToServer(remoteNotes: notesFromServer!) { complete in
-                                    if !complete {
-                                        self.showAlert(withMessage: "Could not sync notes to server. Check connection!")
-                                    }
-                                    self.refreshNotesTable()
-                                }
+                self.cloudNotesModel.syncLocalNotesToServer(remoteNotes: notesFromServer!) { complete in
+                    if !complete {
+                        self.showAlert(withMessage: "Could not sync notes to server. Check connection!")
+                    }
+                    self.refreshNotesTable()
+                    self.activityIndicator.stopAnimating()
+                }
                 self.refreshNotesTable()
             } else {
                 // If server unavailable get notes from CoreData and show alert
@@ -70,7 +64,6 @@ class NotesListTableViewController: UITableViewController {
     func refreshNotesTable() {
         self.notes = self.cloudNotesModel.getLocalNotes()
         self.tableView.reloadData()
-        self.refreshControl?.endRefreshing()
     }
     
     override func didReceiveMemoryWarning() {

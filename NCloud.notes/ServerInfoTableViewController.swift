@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftKeychainWrapper
+import MessageUI
 
 class ServerInfoTableViewController: UITableViewController {
     @IBOutlet weak var connectionActivityIndecator: UIActivityIndicatorView!
@@ -16,6 +17,7 @@ class ServerInfoTableViewController: UITableViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var connectionStatusButton: UILabel!
     @IBOutlet weak var allowSelfSignCertSwitch: UISwitch!
+    @IBAction func closeServerInfo(_ sender: Any) { self.dismiss(animated: true, completion: nil) }
     var isLoggedIn = false {
         didSet {
             if isLoggedIn {
@@ -27,7 +29,6 @@ class ServerInfoTableViewController: UITableViewController {
             } else {
                 removeServerCredentials()
                 UserDefaults.standard.removeObject(forKey: "loggedIn")
-                UserDefaults.standard.removeObject(forKey: "syncOnStart")
                 serverNameTextField.text = ""; userNameTextField.text = ""; passwordTextField.text = ""
                 CloudNotesModel.instance.deleteLocalNotes()
                 connectionStatusButton.text = "Connect"
@@ -37,7 +38,7 @@ class ServerInfoTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Server information"
+        //self.title = "Server information"
         connectionActivityIndecator.isHidden = true
         if UserDefaults.standard.object(forKey: "loggedIn") as? Bool != nil {
             isLoggedIn = true
@@ -61,41 +62,63 @@ class ServerInfoTableViewController: UITableViewController {
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? 4 : 1
+        switch section {
+        case 0:
+            return 4
+        case 1:
+            return 1
+        case 2:
+            return 1
+        default:
+            return 0
+        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         // Click "Connect/Disconnect" button
-        guard indexPath.section == 1 else { return }
-        if !isLoggedIn {
-            // Click "Connect" button
-            if (serverNameTextField.text?.characters.count)! > 0 && (userNameTextField.text?.characters.count)! > 0 && (passwordTextField.text?.characters.count)! > 0 && !connectionActivityIndecator.isAnimating {
-                connectionActivityIndecator.isHidden = false; self.connectionActivityIndecator.startAnimating()
-                self.saveServerCredentials()
-                CloudNotesHTTP.instance.getRemoteNotes() { response, result in
-                    if result {
-                        CloudNotesModel.instance.saveRemoteNotes(notesArray: response!)
-                        UserDefaults.standard.set(true, forKey: "loggedIn")
-                        self.isLoggedIn = true
-                        self.showAlert(withMessage: "Connection successfull")
-                    } else {
-                        self.removeServerCredentials()
-                        self.showAlert(withMessage: "Server information is incorrect or server is not available!")
+        switch indexPath.section {
+        case 1:
+            if !isLoggedIn {
+                // Click "Connect" button
+                if (serverNameTextField.text?.characters.count)! > 0 && (userNameTextField.text?.characters.count)! > 0 && (passwordTextField.text?.characters.count)! > 0 && !connectionActivityIndecator.isAnimating {
+                    connectionActivityIndecator.isHidden = false; self.connectionActivityIndecator.startAnimating()
+                    self.saveServerCredentials()
+                    CloudNotesHTTP.instance.getRemoteNotes() { response, result in
+                        if result {
+                            CloudNotesModel.instance.saveRemoteNotes(notesArray: response!)
+                            UserDefaults.standard.set(true, forKey: "loggedIn")
+                            self.isLoggedIn = true
+                            self.showAlert(withMessage: "Connection successfull")
+                        } else {
+                            self.removeServerCredentials()
+                            self.showAlert(withMessage: "Server information is incorrect or server is not available!")
+                        }
+                        self.connectionActivityIndecator.stopAnimating(); self.connectionActivityIndecator.isHidden = true
                     }
-                    self.connectionActivityIndecator.stopAnimating(); self.connectionActivityIndecator.isHidden = true
+                } else {
+                    // One of the fields is empty
+                    showAlert(withMessage: "Server information is incorrect!")
                 }
             } else {
-                // One of the fields is empty
-                showAlert(withMessage: "Server information is incorrect!")
+                // Click "Disconnect" button
+                isLoggedIn = false
             }
-        } else {
-            // Click "Disconnect" button
-            isLoggedIn = false
+        
+        case 2:
+            guard MFMailComposeViewController.canSendMail() else { return }
+            let mailComposeVC = MFMailComposeViewController()
+            mailComposeVC.mailComposeDelegate = self
+            mailComposeVC.setToRecipients(["support@didanov.com"])
+            mailComposeVC.setSubject("nc.Notes issue")
+            present(mailComposeVC, animated: true, completion: nil)
+            
+        default:
+            return
         }
     }
     
@@ -122,5 +145,12 @@ class ServerInfoTableViewController: UITableViewController {
     
     deinit {
         print("ServerInfoTableViewController deinited")
+    }
+}
+
+// Send mail extension
+extension ServerInfoTableViewController: MFMailComposeViewControllerDelegate {
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        dismiss(animated: true, completion: nil)
     }
 }

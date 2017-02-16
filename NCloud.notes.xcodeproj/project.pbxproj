@@ -20,7 +20,6 @@
 		E2E0733A1E12FBFC009CF9A1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2E073391E12FBFC009CF9A1 /* Assets.xcassets */; };
 		E2E0733D1E12FBFC009CF9A1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2E0733B1E12FBFC009CF9A1 /* LaunchScreen.storyboard */; };
 		E2E073461E14CB46009CF9A1 /* NotesListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E073451E14CB46009CF9A1 /* NotesListTableViewController.swift */; };
-		E2E073481E14CE9C009CF9A1 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E073471E14CE9C009CF9A1 /* SettingsTableViewController.swift */; };
 		E2E0734C1E162FCD009CF9A1 /* ServerInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E0734B1E162FCD009CF9A1 /* ServerInfoTableViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,7 +40,6 @@
 		E2E0733C1E12FBFC009CF9A1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E2E0733E1E12FBFC009CF9A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E2E073451E14CB46009CF9A1 /* NotesListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotesListTableViewController.swift; sourceTree = "<group>"; };
-		E2E073471E14CE9C009CF9A1 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		E2E0734B1E162FCD009CF9A1 /* ServerInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerInfoTableViewController.swift; sourceTree = "<group>"; };
 		FA6FFD17048E516E50F9B38C /* Pods-NCloud.notes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NCloud.notes.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NCloud.notes/Pods-NCloud.notes.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -85,6 +83,15 @@
 			name = "CoreData Files";
 			sourceTree = "<group>";
 		};
+		E27017F61E557D4600631B68 /* Model Files */ = {
+			isa = PBXGroup;
+			children = (
+				E25E5CBF1E19886300622278 /* CloudNotesModel.swift */,
+				E220306D1E3934D50019BDA7 /* CloudNotesHTTP.swift */,
+			);
+			name = "Model Files";
+			sourceTree = "<group>";
+		};
 		E2E073231E12FBFC009CF9A1 = {
 			isa = PBXGroup;
 			children = (
@@ -106,14 +113,12 @@
 		E2E0732E1E12FBFC009CF9A1 /* NCloud.notes */ = {
 			isa = PBXGroup;
 			children = (
-				E25E5CBF1E19886300622278 /* CloudNotesModel.swift */,
-				E220306D1E3934D50019BDA7 /* CloudNotesHTTP.swift */,
 				E2E0734B1E162FCD009CF9A1 /* ServerInfoTableViewController.swift */,
-				E2E073471E14CE9C009CF9A1 /* SettingsTableViewController.swift */,
 				E2E073451E14CB46009CF9A1 /* NotesListTableViewController.swift */,
 				E2DAD70A1E3940D800CAAD36 /* EditNoteViewController.swift */,
 				E2E073331E12FBFC009CF9A1 /* Main.storyboard */,
 				E2E073361E12FBFC009CF9A1 /* NCloud_notes.xcdatamodeld */,
+				E27017F61E557D4600631B68 /* Model Files */,
 				E22F14A11E4271BB00F8CF93 /* CoreData Files */,
 				E2E073441E12FC6B009CF9A1 /* Supporting Files */,
 			);
@@ -258,7 +263,6 @@
 			files = (
 				E22F14A01E4271B100F8CF93 /* Note+CoreDataProperties.swift in Sources */,
 				E2E0734C1E162FCD009CF9A1 /* ServerInfoTableViewController.swift in Sources */,
-				E2E073481E14CE9C009CF9A1 /* SettingsTableViewController.swift in Sources */,
 				E2DAD70B1E3940D800CAAD36 /* EditNoteViewController.swift in Sources */,
 				E220306E1E3934D50019BDA7 /* CloudNotesHTTP.swift in Sources */,
 				E25E5CC01E19886300622278 /* CloudNotesModel.swift in Sources */,
