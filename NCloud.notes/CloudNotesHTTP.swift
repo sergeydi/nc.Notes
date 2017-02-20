@@ -42,9 +42,13 @@ class CloudNotesHTTP {
     func updateRemoteNotes(fromLocalNotes: [NSManagedObjectID], updateRemoteNotesHandler:@escaping (Bool) -> Void) {
         guard authHeader != nil,  let serverName = KeychainWrapper.standard.string(forKey: "server") else { updateRemoteNotesHandler(false); return }
         
+        var updatedNotes = [AnyObject]()
         var updateRequests = fromLocalNotes.count {
             didSet {
                 if updateRequests == 0 {
+                    if updatedNotes.count > 0 {
+                        CloudNotesModel.instance.updateLocalNotes(updatedNotes: updatedNotes)
+                    }
                     updateRemoteNotesHandler(true)
                 }
             }
@@ -57,6 +61,7 @@ class CloudNotesHTTP {
             
             Alamofire.request(url, method: .put, parameters: parameters, headers: authHeader).validate().responseJSON { response in
                 if response.result.isSuccess {
+                    updatedNotes.append(response.result.value as AnyObject)
                     updateRequests -= 1
                 } else {
                     updateRemoteNotesHandler(false)
