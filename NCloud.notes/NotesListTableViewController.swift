@@ -98,12 +98,18 @@ class NotesListTableViewController: UITableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "editNoteSegue" {
-            guard let indexPath = self.tableView.indexPathForSelectedRow else { return }
             let destinationController = segue.destination as! EditNoteViewController
-            destinationController.noteID = self.notes[indexPath.row].objectID
             let backItem = UIBarButtonItem()
             backItem.title = "Notes"
             navigationItem.backBarButtonItem = backItem
+            guard let indexPath = self.tableView.indexPathForSelectedRow else { return }
+            destinationController.noteID = self.notes[indexPath.row].objectID
+        } else if segue.identifier == "newNoteSegue" {
+            let destinationController = segue.destination as! EditNoteViewController
+            let backItem = UIBarButtonItem()
+            backItem.title = "Notes"
+            navigationItem.backBarButtonItem = backItem
+            destinationController.noteID = CloudNotesModel.instance.addNewLocalNote()
         }
     }
     

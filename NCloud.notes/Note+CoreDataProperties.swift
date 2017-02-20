@@ -2,7 +2,7 @@
 //  Note+CoreDataProperties.swift
 //  NCloud.notes
 //
-//  Created by Sergey Didanov on 01.02.17.
+//  Created by Sergey Didanov on 20.02.17.
 //  Copyright © 2017 Sergey Didanov. All rights reserved.
 //
 

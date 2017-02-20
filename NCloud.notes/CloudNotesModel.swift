@@ -21,6 +21,9 @@ class CloudNotesModel {
         
         // Sync local notes to server
         for localNote in localNotes {
+            if localNote.id == nil {
+                print("Found new local note")
+            }
             if Int(localNote.modified) > (remoteNotesDict[Int(localNote.id)] as! [String:AnyObject])["modified"] as! Int {
                 print("Found note to update")
                 updatedNotes.append(localNote.objectID)
@@ -35,8 +38,10 @@ class CloudNotesModel {
         }
     }
     
-    func getNewLocalNotes() {
-        
+    func addNewLocalNote() -> NSManagedObjectID {
+        let newNote = Note()
+        CoreDataManager.instance.saveContext()
+        return newNote.objectID
     }
     
     func getLocalNotes() -> [Note] {

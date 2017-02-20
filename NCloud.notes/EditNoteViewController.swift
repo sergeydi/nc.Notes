@@ -37,7 +37,7 @@ class EditNoteViewController: UIViewController, UITextViewDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         // Save or update local note if did any changes
-        if note?.content != textEditView.text {
+        if note?.content != textEditView.text || textEditView.text.characters.count == 0 {
             saveNote()
         }
     }

@@ -175,7 +175,7 @@
                             <tableViewSection headerTitle="Support" id="Sco-1b-Qen">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="uAA-1q-K5V">
-                                        <rect key="frame" x="0.0" y="369" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="368" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="uAA-1q-K5V" id="Obu-VP-31f">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
@@ -235,7 +235,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7Es-um-1pO" id="EEN-s1-FYn">
-                                    <rect key="frame" x="0.0" y="0.0" width="342" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="342" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
@@ -279,6 +279,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="but-hP-Ehu">
                             <connections>
                                 <action selector="addNoteButton:" destination="eQC-j0-fet" id="VZV-an-1hT"/>
+                                <segue destination="Ioi-sS-3gG" kind="show" identifier="newNoteSegue" id="tFY-qI-pb5"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -366,4 +367,7 @@
     <resources>
         <image name="Settings" width="22" height="22"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="OKf-zV-UXY"/>
+    </inferredMetricsTieBreakers>
 </document>
