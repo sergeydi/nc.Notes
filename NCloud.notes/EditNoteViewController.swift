@@ -16,13 +16,14 @@ class EditNoteViewController: UIViewController, UITextViewDelegate {
     var note: Note!
     lazy var shareButton:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.action, target: self, action: #selector(EditNoteViewController.shareNote))
     lazy var finishEditButton: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(EditNoteViewController.exitEditMode))
+    lazy var deleteNoteButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "DeleteNote"), style: .plain, target: self, action: #selector(EditNoteViewController.deleteNote))
     let cloudNotesModel = CloudNotesModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Finish edit text button
-        navigationItem.setRightBarButtonItems([finishEditButton, shareButton], animated: true)
+        navigationItem.setRightBarButtonItems([finishEditButton, shareButton, deleteNoteButton], animated: true)
         finishEditButton.isEnabled = false
         note = CoreDataManager.instance.managedObjectContext.object(with: noteID) as! Note
         // Load text from note to textEditView
@@ -40,6 +41,11 @@ class EditNoteViewController: UIViewController, UITextViewDelegate {
         if note?.content != textEditView.text || textEditView.text.characters.count == 0 {
             saveNote()
         }
+    }
+    
+    func deleteNote() {
+        note?.delete = true
+        CoreDataManager.instance.saveContext()
     }
     
     func saveNote() {
