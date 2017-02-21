@@ -21,12 +21,13 @@ class CloudNotesModel {
         
         // Sync local notes to server
         for localNote in localNotes {
-            if localNote.id == nil {
+            if localNote.id == 0 {
+                updatedNotes.append(localNote.objectID)
                 print("Found new local note")
             }
-            if Int(localNote.modified) > (remoteNotesDict[Int(localNote.id)] as! [String:AnyObject])["modified"] as! Int {
-                print("Found note to update")
+            if localNote.id > 0 && Int(localNote.modified) > (remoteNotesDict[Int(localNote.id)] as! [String:AnyObject])["modified"] as! Int {
                 updatedNotes.append(localNote.objectID)
+                print("Found note to update")
             }
         }
         if updatedNotes.count > 0 {
@@ -40,6 +41,7 @@ class CloudNotesModel {
     
     func addNewLocalNote() -> NSManagedObjectID {
         let newNote = Note()
+        newNote.modified = Int64(Date().timeStamp)
         CoreDataManager.instance.saveContext()
         return newNote.objectID
     }
@@ -65,7 +67,7 @@ class CloudNotesModel {
         let remoteNotesDict = convertRemoteNotesToDictionaryByID(notes: remoteNotes)
         // Remove local notes deleted on server
         for (key, value) in localNotesDict {
-            if remoteNotesDict[key] == nil {
+            if remoteNotesDict[key] == nil && value.id > 0 {
                 notesToDelete.append(value)
             }
         }
@@ -100,7 +102,9 @@ class CloudNotesModel {
         let localNotesDictionary = convertLocalNotesToDictionaryByID(notes: localNotes)
         // Remove old notes from CoreData
         for case let updatedNote as [String:AnyObject] in updatedNotes {
+            if localNotesDictionary[(updatedNote["id"] as! Int)] != nil {
             CoreDataManager.instance.managedObjectContext.delete(localNotesDictionary[(updatedNote["id"] as! Int)]!)
+            }
         }
         CoreDataManager.instance.saveContext()
         // Save updated notes to CoreData
@@ -145,6 +149,12 @@ class CloudNotesModel {
     func deleteLocalNotes() {
         let localNotes = getLocalNotes()
         CoreDataManager.instance.deleteObjects(objects: localNotes)
+    }
+}
+
+extension Date {
+    var timeStamp: UInt64 {
+        return UInt64(Int64(self.timeIntervalSince1970))
     }
 }
 

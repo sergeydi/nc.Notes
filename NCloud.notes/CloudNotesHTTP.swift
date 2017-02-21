@@ -54,12 +54,25 @@ class CloudNotesHTTP {
             }
         }
         
-        for localNoteID in fromLocalNotes {
-            let localNote = CoreDataManager.instance.managedObjectContext.object(with: localNoteID) as! Note
-            let parameters: Parameters = ["content": localNote.content!]
-            let url = "https://" + serverName + noteApiBaseURL + "/\(localNote.id)"
+        for localNoteObjectID in fromLocalNotes {
+            let localNote = CoreDataManager.instance.managedObjectContext.object(with: localNoteObjectID) as! Note
+            let parameters: Parameters = ["content": localNote.content!, "modified" : localNote.modified]
+            var url = ""
+            var httpMethod: HTTPMethod
             
-            Alamofire.request(url, method: .put, parameters: parameters, headers: authHeader).validate().responseJSON { response in
+            if localNote.id > 0 {
+                // URL for updating exist note
+                url = "https://" + serverName + noteApiBaseURL + "/\(localNote.id)"
+                httpMethod = .put
+            } else {
+                // URL for adding new note
+                url = "https://" + serverName + noteApiBaseURL
+                httpMethod = .post
+                // Delete new local note withot ID
+                CoreDataManager.instance.deleteObject(object: localNote)
+            }
+            
+            Alamofire.request(url, method: httpMethod, parameters: parameters, headers: authHeader).validate().responseJSON { response in
                 if response.result.isSuccess {
                     updatedNotes.append(response.result.value as AnyObject)
                     updateRequests -= 1
