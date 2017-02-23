@@ -51,7 +51,6 @@ class NotesListTableViewController: UITableViewController {
                     self.refreshNotesTable()
                     self.activityIndicator.stopAnimating()
                 }
-                self.refreshNotesTable()
             } else {
                 // If server unavailable get notes from CoreData and show alert
                 self.showAlert(withMessage: "Could not receive notes from server. Check connection!")
@@ -62,7 +61,7 @@ class NotesListTableViewController: UITableViewController {
     
     // Get notes from CoreData and refresh tableview
     func refreshNotesTable() {
-        self.notes = self.cloudNotesModel.getLocalNotes(type: .all)
+        self.notes = self.cloudNotesModel.getLocalNotes(usingFilter: .withoutDeleted)
         self.tableView.reloadData()
     }
     
@@ -88,7 +87,7 @@ class NotesListTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
         let note = notes[indexPath.row]
         cell.textLabel?.text = note.title
-        print(note.delete)
+        
         return cell
     }
     

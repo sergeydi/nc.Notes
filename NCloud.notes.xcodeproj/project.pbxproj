@@ -78,8 +78,8 @@
 			children = (
 				E248E4361E5C1231001E42AD /* Note+CoreDataClass.swift */,
 				E248E4371E5C1231001E42AD /* Note+CoreDataProperties.swift */,
-				E2E073361E12FBFC009CF9A1 /* NCloud_notes.xcdatamodeld */,
 				E2D4E38F1E404B500028E4F1 /* CoreDataManager.swift */,
+				E2E073361E12FBFC009CF9A1 /* NCloud_notes.xcdatamodeld */,
 			);
 			name = "CoreData Files";
 			sourceTree = "<group>";

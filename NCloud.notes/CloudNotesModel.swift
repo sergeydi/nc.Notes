@@ -15,21 +15,14 @@ class CloudNotesModel {
     
     // Sync changes(new, update, delete) in local notes to server
     func syncLocalNotesToServer(remoteNotes: [AnyObject], completeHandler:@escaping (Bool) -> Void) {
-        let localNotes = getLocalNotes(type: .all)
+        let localNotes = getLocalNotes(usingFilter: .all)
         var updatedNotes = [NSManagedObjectID]()
         let remoteNotesDict = convertRemoteNotesToDictionaryByID(notes: remoteNotes)
 
         // Search new, updated or deleted notes in Local notes
         for localNote in localNotes {
-            if localNote.delete {
+            if localNote.delete || localNote.id == 0 || (localNote.id > 0 && Int(localNote.modified) > (remoteNotesDict[Int(localNote.id)] as! [String:AnyObject])["modified"] as! Int) {
                 updatedNotes.append(localNote.objectID)
-                print("Fount note to delete")
-            } else if localNote.id == 0 {
-                updatedNotes.append(localNote.objectID)
-                print("Found new local note")
-            } else if localNote.id > 0 && Int(localNote.modified) > (remoteNotesDict[Int(localNote.id)] as! [String:AnyObject])["modified"] as! Int {
-                updatedNotes.append(localNote.objectID)
-                print("Found note to update")
             }
         }
         if updatedNotes.count > 0 {
@@ -48,19 +41,17 @@ class CloudNotesModel {
         return newNote.objectID
     }
     
-    func getLocalNotes(type: NotesType) -> [Note] {
+    func getLocalNotes(usingFilter: NotesType) -> [Note] {
         var sortedNotes = [Note]()
         let fetchRequest = NSFetchRequest<Note>(entityName: "Note")
         let sortDescriptor = NSSortDescriptor(key: "modified", ascending: false)
         fetchRequest.sortDescriptors = [sortDescriptor]
-//        if type == .current {
-//            print("Try to get current notes")
-//            let predicate = NSPredicate(format: "%K == %@", "delete", false as CVarArg)
-//            fetchRequest.predicate = predicate
-//        }
+        if usingFilter == .withoutDeleted {
+            let predicate = NSPredicate(format: "%K == %@", "delete", false as CVarArg)
+            fetchRequest.predicate = predicate
+        }
         do {
             sortedNotes = try CoreDataManager.instance.managedObjectContext.fetch(fetchRequest)
-            print(sortedNotes.count)
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
@@ -71,7 +62,7 @@ class CloudNotesModel {
         var newNotes = [AnyObject]()
         var updatedNotes = [AnyObject]()
         var notesToDelete = [Note]()
-        let localNotesDict = convertLocalNotesToDictionaryByID(notes: getLocalNotes(type: .all))
+        let localNotesDict = convertLocalNotesToDictionaryByID(notes: getLocalNotes(usingFilter: .all))
         let remoteNotesDict = convertRemoteNotesToDictionaryByID(notes: remoteNotes)
         // Remove local notes deleted on server
         for (key, value) in localNotesDict {
@@ -106,7 +97,7 @@ class CloudNotesModel {
     }
     
     func updateLocalNotes(updatedNotes: [AnyObject]) {
-        let localNotes = getLocalNotes(type: .all)
+        let localNotes = getLocalNotes(usingFilter: .all)
         let localNotesDictionary = convertLocalNotesToDictionaryByID(notes: localNotes)
         // Remove old notes from CoreData
         for case let updatedNote as [String:AnyObject] in updatedNotes {
@@ -155,13 +146,13 @@ class CloudNotesModel {
     
     // Delete all local notes
     func deleteLocalNotes() {
-        let localNotes = getLocalNotes(type: .all)
+        let localNotes = getLocalNotes(usingFilter: .all)
         CoreDataManager.instance.deleteObjects(objects: localNotes)
     }
     
     enum NotesType {
-        case all
-        //current // without deleted
+        case all,
+        withoutDeleted // without deleted
     }
     
 }

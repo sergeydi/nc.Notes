@@ -13,25 +13,28 @@ import CoreData
 
 class CloudNotesHTTP {
     static let instance = CloudNotesHTTP()
-    
     let noteApiBaseURL = "/index.php/apps/notes/api/v0.2/notes"
+    // http header for bacsic authentication
     var authHeader: HTTPHeaders? {
         guard let username = KeychainWrapper.standard.string(forKey: "username"),
-            let password = KeychainWrapper.standard.string(forKey: "password") else { return nil }
+            let password = KeychainWrapper.standard.string(forKey: "password"),
+            let authorizationHeader = Request.authorizationHeader(user: username, password: password) else { return nil }
+        
         var header: HTTPHeaders = [:]
-        if let authorizationHeader = Request.authorizationHeader(user: username, password: password) {
-            header[authorizationHeader.key] = authorizationHeader.value
-        }
+        header[authorizationHeader.key] = authorizationHeader.value
+        
         return header
     }
     
     // Get all notes from server
     func getRemoteNotes(completeHandler:@escaping ([AnyObject]?, Bool) -> Void) {
-        guard authHeader != nil, let serverName = KeychainWrapper.standard.string(forKey: "server") else { completeHandler(nil, false); return }
+        guard authHeader != nil,
+            let serverName = KeychainWrapper.standard.string(forKey: "server") else { completeHandler(nil, false); return }
+        
         let url = "https://" + serverName + noteApiBaseURL
         Alamofire.request(url, headers: authHeader).validate().responseJSON { response in
             if response.result.isSuccess {
-                // If Success return JSON response from the server
+                // If Success return JSON response with all notes from the server
                 completeHandler(response.result.value as? [AnyObject], true)
             } else {
                 completeHandler(nil, false)
@@ -39,11 +42,13 @@ class CloudNotesHTTP {
         }
     }
     
-    func updateRemoteNotes(fromLocalNotes: [NSManagedObjectID], updateRemoteNotesHandler:@escaping (Bool) -> Void) {
-        guard authHeader != nil,  let serverName = KeychainWrapper.standard.string(forKey: "server") else { updateRemoteNotesHandler(false); return }
+    // add, delete or update notes on server
+    func updateRemoteNotes(fromLocalNotes localNotesID: [NSManagedObjectID], updateRemoteNotesHandler:@escaping (Bool) -> Void) {
+        guard authHeader != nil,
+            let serverName = KeychainWrapper.standard.string(forKey: "server") else { updateRemoteNotesHandler(false); return }
         
         var updatedNotes = [AnyObject]()
-        var updateRequests = fromLocalNotes.count {
+        var updateRequests = localNotesID.count {
             didSet {
                 if updateRequests == 0 {
                     if updatedNotes.count > 0 {
@@ -54,27 +59,28 @@ class CloudNotesHTTP {
             }
         }
         
-        for localNoteObjectID in fromLocalNotes {
+        for localNoteObjectID in localNotesID {
             let localNote = CoreDataManager.instance.managedObjectContext.object(with: localNoteObjectID) as! Note
+            // Note bode and modified date used for send to server
             let parameters: Parameters = ["content": localNote.content!, "modified" : localNote.modified]
             var url = ""
             var httpMethod: HTTPMethod
             if localNote.delete {
-                print("Found note to delete")
+                // Delete note
                 url = "https://" + serverName + noteApiBaseURL + "/\(localNote.id)"
                 httpMethod = .delete
+            } else if localNote.id > 0 {
+                // Update exist note
+                url = "https://" + serverName + noteApiBaseURL + "/\(localNote.id)"
+                httpMethod = .put
+            } else if localNote.id == 0 {
+                // Add new note
+                url = "https://" + serverName + noteApiBaseURL
+                httpMethod = .post
+                // Delete new local note withot ID
+                CoreDataManager.instance.deleteObject(object: localNote)
             } else {
-                if localNote.id > 0 {
-                    // URL for updating exist note
-                    url = "https://" + serverName + noteApiBaseURL + "/\(localNote.id)"
-                    httpMethod = .put
-                } else {
-                    // URL for adding new note
-                    url = "https://" + serverName + noteApiBaseURL
-                    httpMethod = .post
-                    // Delete new local note withot ID
-                    CoreDataManager.instance.deleteObject(object: localNote)
-                }
+                continue
             }
             
             Alamofire.request(url, method: httpMethod, parameters: parameters, headers: authHeader).validate().responseJSON { response in
