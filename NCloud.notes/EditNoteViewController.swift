@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 class EditNoteViewController: UIViewController, UITextViewDelegate {
-
+    
     @IBOutlet weak var textEditView: UITextView!
     var noteID: NSManagedObjectID!
     var note: Note!
@@ -44,8 +44,13 @@ class EditNoteViewController: UIViewController, UITextViewDelegate {
     }
     
     func deleteNote() {
-        note?.delete = true
-        CoreDataManager.instance.saveContext()
+        if note.id > 0 {
+            note.delete = true
+            CoreDataManager.instance.saveContext()
+        } else {
+            CoreDataManager.instance.deleteObject(object: note)
+        }
+        _ = navigationController?.popViewController(animated: true)
     }
     
     func saveNote() {
@@ -75,7 +80,7 @@ class EditNoteViewController: UIViewController, UITextViewDelegate {
     override func viewDidLayoutSubviews() {
         self.textEditView.setContentOffset(CGPoint.zero, animated: false)
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -85,17 +90,17 @@ class EditNoteViewController: UIViewController, UITextViewDelegate {
         print("EditNoteViewController deinited")
     }
     
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destinationViewController.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
 
 extension String {

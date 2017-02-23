@@ -59,17 +59,22 @@ class CloudNotesHTTP {
             let parameters: Parameters = ["content": localNote.content!, "modified" : localNote.modified]
             var url = ""
             var httpMethod: HTTPMethod
-            
-            if localNote.id > 0 {
-                // URL for updating exist note
+            if localNote.delete {
+                print("Found note to delete")
                 url = "https://" + serverName + noteApiBaseURL + "/\(localNote.id)"
-                httpMethod = .put
+                httpMethod = .delete
             } else {
-                // URL for adding new note
-                url = "https://" + serverName + noteApiBaseURL
-                httpMethod = .post
-                // Delete new local note withot ID
-                CoreDataManager.instance.deleteObject(object: localNote)
+                if localNote.id > 0 {
+                    // URL for updating exist note
+                    url = "https://" + serverName + noteApiBaseURL + "/\(localNote.id)"
+                    httpMethod = .put
+                } else {
+                    // URL for adding new note
+                    url = "https://" + serverName + noteApiBaseURL
+                    httpMethod = .post
+                    // Delete new local note withot ID
+                    CoreDataManager.instance.deleteObject(object: localNote)
+                }
             }
             
             Alamofire.request(url, method: httpMethod, parameters: parameters, headers: authHeader).validate().responseJSON { response in

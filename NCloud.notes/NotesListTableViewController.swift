@@ -62,7 +62,7 @@ class NotesListTableViewController: UITableViewController {
     
     // Get notes from CoreData and refresh tableview
     func refreshNotesTable() {
-        self.notes = self.cloudNotesModel.getLocalNotes()
+        self.notes = self.cloudNotesModel.getLocalNotes(type: .all)
         self.tableView.reloadData()
     }
     
@@ -88,7 +88,7 @@ class NotesListTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
         let note = notes[indexPath.row]
         cell.textLabel?.text = note.title
-        
+        print(note.delete)
         return cell
     }
     
