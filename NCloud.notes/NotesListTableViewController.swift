@@ -12,9 +12,8 @@ import CoreData
 class NotesListTableViewController: UITableViewController {
     let cloudNotesModel = CloudNotesModel()
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    @IBAction func addNoteButton(_ sender: Any) {
-        print("Add new note action")
-    }
+    @IBOutlet weak var addNewNoteButton: UIBarButtonItem!
+
     @IBOutlet weak var configurationButton: UIButton!
     var notes: [Note] = []
     let coreDataManager = CoreDataManager()
@@ -31,6 +30,7 @@ class NotesListTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         if UserDefaults.standard.object(forKey: "loggedIn") as? Bool != nil {
+            addNewNoteButton.isEnabled = true
             refreshNotesTable()
             syncNotes()
         }
@@ -53,6 +53,7 @@ class NotesListTableViewController: UITableViewController {
                 }
             } else {
                 // If server unavailable get notes from CoreData and show alert
+                self.activityIndicator.stopAnimating()
                 self.showAlert(withMessage: "Could not receive notes from server. Check connection!")
                 self.refreshNotesTable()
             }
