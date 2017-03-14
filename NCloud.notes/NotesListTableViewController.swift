@@ -18,9 +18,6 @@ class NotesListTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NotificationCenter.default.addObserver(self,
-                                               selector:#selector(NotesListTableViewController.syncNotes),
-                                               name:NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         
         // Set configuration button image color
         let origImage = UIImage(named: "Settings")
@@ -35,6 +32,18 @@ class NotesListTableViewController: UITableViewController {
             refreshNotesTable()
             syncNotes()
         }
+    }
+    
+    // Syn notes after Application Will Enter Foreground
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        NotificationCenter.default.addObserver(self,
+                                               selector:#selector(NotesListTableViewController.syncNotes),
+                                               name:NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
     }
     
     // Try to sync local <---> remote notes
