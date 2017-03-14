@@ -77,8 +77,6 @@ class CloudNotesHTTP {
                 // Add new note
                 url = "https://" + serverName + noteApiBaseURL
                 httpMethod = .post
-                // Delete new local note withot ID
-                CoreDataManager.instance.deleteObject(object: localNote)
             } else {
                 continue
             }
@@ -86,6 +84,10 @@ class CloudNotesHTTP {
             Alamofire.request(url, method: httpMethod, parameters: parameters, headers: authHeader).validate().responseJSON { response in
                 if response.result.isSuccess {
                     updatedNotes.append(response.result.value as AnyObject)
+                    // remove new local note(without ID) if it successfully created on server
+                    if localNote.id == 0 {
+                        CoreDataManager.instance.deleteObject(object: localNote)
+                    }
                     updateRequests -= 1
                 } else {
                     updateRemoteNotesHandler(false)

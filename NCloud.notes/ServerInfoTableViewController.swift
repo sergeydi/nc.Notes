@@ -38,7 +38,6 @@ class ServerInfoTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //self.title = "Server information"
         connectionActivityIndecator.isHidden = true
         if UserDefaults.standard.object(forKey: "loggedIn") as? Bool != nil {
             isLoggedIn = true

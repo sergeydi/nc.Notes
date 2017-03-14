@@ -7,16 +7,13 @@
 //
 
 import UIKit
-import CoreData
 
 class NotesListTableViewController: UITableViewController {
     let cloudNotesModel = CloudNotesModel()
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var addNewNoteButton: UIBarButtonItem!
-
     @IBOutlet weak var configurationButton: UIButton!
     var notes: [Note] = []
-    let coreDataManager = CoreDataManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,7 +52,6 @@ class NotesListTableViewController: UITableViewController {
                 // If server unavailable get notes from CoreData and show alert
                 self.activityIndicator.stopAnimating()
                 self.showAlert(withMessage: "Could not receive notes from server. Check connection!")
-                self.refreshNotesTable()
             }
         }
     }
