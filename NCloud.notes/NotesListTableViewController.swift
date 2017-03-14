@@ -18,6 +18,10 @@ class NotesListTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        NotificationCenter.default.addObserver(self,
+                                               selector:#selector(NotesListTableViewController.syncNotes),
+                                               name:NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+        
         // Set configuration button image color
         let origImage = UIImage(named: "Settings")
         let tintedImage = origImage?.withRenderingMode(.alwaysTemplate)
